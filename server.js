@@ -17,4 +17,29 @@ app.get("/api/listings", (req,res)=>{ // test api
     res.end()
 })
 
+// Database Connection
+
+const mysql = require('mysql2')
+const connection = mysql.createConnection({
+  // Hardcoded Values
+  host: 'winhost',                  //replace with SQL server host
+  user: 'wsl_root',                 //replace with SQL server username
+  password: 'password',             
+  database: 'alternative_housing',
+  port: 3306
+})
+
+connection.connect()
+
+// Sample Query
+connection.query(
+    'SELECT * FROM `properties` ',
+    function(err, results, fields) {
+      console.log(results); // results contains rows returned by server
+    //   console.log(fields); // fields contains extra meta data about results, if available
+    }
+  );
+
+connection.end()
+
 app.listen(3000)
