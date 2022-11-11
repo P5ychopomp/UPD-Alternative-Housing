@@ -4,9 +4,9 @@ import json
 property_name = []
 properties = []
 
-for x in range(1,151):                                   # property_name
+for x in range(1,151):                                   # property_id, property_name
     house = 'House' + str(x) 
-    property_name.append([house])
+    property_name.append([x, house])
 
 loyola_heights = ['A. Melchor', 'A. Regidor', 'Alta Vista', 'Aurora Blvd', 'Avelino', 'B. Burgos', 'B. Gonzales', 'C. Salvador', 'College Lane', 'Esteban Abada St', 'F. Collantes', 'F. Dela Rosa', 'Father Arrupe Rd', 'Father Masterson Dr', 'Garcia', 'Guerrero', 'J. Bocobo', 'J. Escaler', 'J. P. Burgos', 'J. P. Laurel', 'Jade', 'Jesuit Residence Lane', 'Jocson', 'Katipunan Ave', 'Laurel', 'M. Delos Santos', 'M. V. Del Rosario', 'Magsaysay', 'Mangyan Rd', 'Marymount', 'Melissa Dr', 'Narra', 'Nicanor Reyes', 'Osmena', 'Pajo', 'Palma', 'Parade loop', 'Park 9', 'President Carlos P. Garcia Ave', 'Quezon', 'Quirino', 'Quisumbing Drive', 'Rosa Alvero', 'Roxas', 'Seminary Rd', 'T. Evangelista', 'Thornton Drive', 'Topside Valley', 'University Road', 'Xavierville Ave', 'Zen Garden Path']
 
@@ -31,7 +31,7 @@ for e in property_name:
     lot_type = random.choice(['Dormitory','Condominium','Apartment','Boarding House'])
     lot_area = random.randrange(15,25,1)
     rate = random.randrange(1000,25000,250)
-    min_stay = random.choice([6,12,24])
+    min_month_stay = random.choice([6,12,24])
     num_bedrooms = random.randint(1, 3)
     num_bathrooms = random.randint(0, 1)
     occupancy = random.randint(1, 6)
@@ -41,27 +41,27 @@ for e in property_name:
     if lot_type == 'Dormitory':
         rate = random.randrange(1000,4000,250)
         num_bedrooms = 1
-        min_stay = random.choice([6,12])
+        min_month_stay = random.choice([6,12])
     elif lot_type == 'Boarding House':
         rate = random.randrange(1000,5000,250)
         num_bedrooms = 1
-        min_stay = random.choice([6,12])
+        min_month_stay = random.choice([6,12])
     elif lot_type == 'Apartment':
         rate = random.randrange(10000,25000,250)
         num_bathrooms = 1
         curfew = 0
         lot_area = random.randrange(20,40,1)
-        min_stay = random.choice([12,24])
+        min_month_stay = random.choice([12,24])
     else:
         rate = random.randrange(10000,25000,250)
         num_bathrooms = 1
         curfew = 0
-        min_stay = random.choice([12,24])
+        min_month_stay = random.choice([12,24])
 
     e.append(rate)                                      # rate
     e.append(lot_area)                                  # lot_area
     e.append(lot_type)                                  # lot_type
-    e.append(min_stay)                                  # min_stay
+    e.append(min_month_stay)                            # min_month_stay
     e.append(num_bedrooms)                              # num_bedrooms
     e.append(num_bathrooms)
     e.append(occupancy)
@@ -82,21 +82,22 @@ for e in property_name:
 
     d = {}
     d.update({
-        'property_name': e[0],
-        'unit_num': e[1],
-        'street_address': e[2],
-        'municip_brgy': e[3],
-        'city': e[4],
-        'rate': e[5],
-        'lot_area': e[6],
-        'lot_type': e[7],
-        'min_stay': e[8],
-        'num_bedrooms': e[9],
-        'num_bathrooms': e[10],
-        'occupancy': e[11],
-        'furnishing': e[12],
-        'curfew': e[13],
-        'date_posted': e[14],
+        'property_id': e[0],
+        'property_name': e[1],
+        'unit_num': e[2],
+        'street_address': e[3],
+        'brgy': e[4],
+        'city_municip': e[5],
+        'rate': e[6],
+        'lot_area': e[7],
+        'lot_type': e[8],
+        'min_month_stay': e[9],
+        'num_bedrooms': e[10],
+        'num_bathrooms': e[11],
+        'occupancy': e[12],
+        'furnishing': e[13],
+        'curfew': e[14],
+        'date_posted': e[15],
     })
     properties.append(d)
 
