@@ -1,0 +1,91 @@
+ @font-face {
+    font-family: 'GoogleSans-Regular';
+    src: url('GoogleSans-Regular.ttf') format('truetype'),
+         url('GoogleSans-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'GoogleSans-Medium';
+    src: url('GoogleSans-Medium.ttf') format('truetype'),
+         url('GoogleSans-Medium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+.listings-screen {
+    align-items: center;
+    background-color: white;
+    border: 1px none;
+    display: flex;
+    flex-direction: column;
+    height: 2758px;
+    width: 1440px;
+}
+
+.header {
+    align-items: center;
+    border: 1px none;
+    display: flex;
+    margin-right: 18px;
+    margin-top: 0;
+    min-width: 1170px;
+}
+
+.logo {
+    height: 124px;
+    margin-bottom: 8px;
+    object-fit: cover;
+    width: 99px;
+}
+
+.logoTitle {
+    font-family: 'GoogleSans-Medium';
+    align-self: flex-start;
+    color: #792E3F;
+    font-size: xx-large;
+    font-weight: 500;
+    height: 134px;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin-top: 20px;
+    width: 346px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.menuItem{
+    font-family: 'GoogleSans-Medium';
+    color: #1F1F1F;
+    font-size: x-large;
+    font-weight: 500;
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.firstlink{
+    cursor: pointer;
+    height: 22px;
+    letter-spacing: 0;
+    line-height: 20px;
+    margin-bottom: 4px;
+    margin-left: 362px;
+    white-space: nowrap;
+    width: 65px;
+}
+
+.link{
+    cursor: pointer;
+    height: 22px;
+    letter-spacing: 0;
+    line-height: 20px;
+    margin-bottom: 4px;
+    margin-left: 40px;
+    white-space: nowrap;
+    width: 65px;
+}
+
