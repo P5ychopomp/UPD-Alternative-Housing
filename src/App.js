@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router} from 'react-router-dom'
-import Header from './components/Header'
+import Navbar from './components/Navbar'
 import Listings from './components/Listings'
 import Search from './components/Search'
+import Footer from './components/Footer';
+import './App.css';
 
 function App() {
   const [properties, setListings] = useState([])
@@ -23,12 +25,13 @@ function App() {
 
     return (
       <Router>
+      <Navbar />
       <div className='container'>
-        <Header />
         <Search />
         <Listings properties={properties} />
 
       </div>
+      <Footer />
     </Router>
       
     );
