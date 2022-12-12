@@ -65,6 +65,7 @@ const Search = ({ properties, setProperties, query, setQuery }) => {
         </ChakraProvider>
     </div>
     
+    
   );
 };
 
