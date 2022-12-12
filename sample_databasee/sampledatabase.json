@@ -1,4 +1,5 @@
-[
+{
+    "listings": [
     {
         "property_id": 1,
         "property_name": "House1",
@@ -2699,4 +2700,4 @@
         "curfew": 0,
         "date_posted": "2023-11-06"
     }
-]
+]}

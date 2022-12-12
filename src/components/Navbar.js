@@ -11,7 +11,7 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-            <img class="navbar-logo" src="USC-logo.png" alt="USC Logo"/>
+            <img className="navbar-logo" src="USC-logo.png" alt="USC Logo"/>
             <h1 className="navbar-title">Alternative <br /> Housing Portal</h1>
                 <div className='menu-icon' onClick={handleClick}>
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />

@@ -17,7 +17,7 @@ const others = {
 const Card = ({ property }) => {
   return (
     <ChakraProvider theme={Theme}>
-      <Box maxW='220px' borderRadius='lg' overflow='hidden' boxShadow='0px 0px 15px 1px #dbdbdb' userSelect='none'>
+      <Box maxW='220px' borderRadius='lg' overflow='hidden' boxShadow='0px 0px 15px 1px #dbdbdb'>
         <Image src={others.imageUrl} alt={others.imageAlt} />
         
         <Box p='2' pt='2' pb='0'>
@@ -39,7 +39,7 @@ const Card = ({ property }) => {
           
           <Box noOfLines={2} fontWeight='normal' color='gray.400' fontSize='xx-small'>
           {property.unit_num} {property.street_address},<br />
-          {property.municip_brgy} {property.city}
+          {property.brgy} {property.city_municip}
           </Box>
   
           <Box fontWeight='bold' mt='4' color='#7b1113' letterSpacing='wide'>
@@ -58,20 +58,6 @@ const Card = ({ property }) => {
             <Icon icon="ph:bathtub" inline='true' height='15'/> <Text ml='1' mr='2'>{property.num_bathrooms}</Text>
             <Icon icon="carbon:area" inline='true' height='15'/> <Text ml='1'>{property.lot_area} sqm</Text>
           </Box>
-  
-          {/* <Box display='flex' mt='2' alignItems='center'>
-            {Array(5)
-              .fill('')
-              .map((_, i) => (
-                <StarIcon
-                  key={i}
-                  color={i < property.rating ? 'teal.500' : 'gray.300'}
-                />
-              ))}
-            <Box as='span' ml='2' color='gray.600' fontSize='sm'>
-              {property.reviewCount} reviews
-            </Box>
-          </Box> */}
         </Box>
       </Box>
     </ChakraProvider>

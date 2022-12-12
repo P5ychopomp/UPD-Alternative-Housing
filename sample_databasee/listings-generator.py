@@ -4,9 +4,9 @@ import json
 property_name = []
 properties = []
 
-for x in range(1,151):                                   # property_id, property_name
+for x in range(1,301):                                   # property_id, property_name
     house = 'House' + str(x) 
-    property_name.append([x, house])
+    property_name.append([x+1000000, house])
 
 loyola_heights = ['A. Melchor', 'A. Regidor', 'Alta Vista', 'Aurora Blvd', 'Avelino', 'B. Burgos', 'B. Gonzales', 'C. Salvador', 'College Lane', 'Esteban Abada St', 'F. Collantes', 'F. Dela Rosa', 'Father Arrupe Rd', 'Father Masterson Dr', 'Garcia', 'Guerrero', 'J. Bocobo', 'J. Escaler', 'J. P. Burgos', 'J. P. Laurel', 'Jade', 'Jesuit Residence Lane', 'Jocson', 'Katipunan Ave', 'Laurel', 'M. Delos Santos', 'M. V. Del Rosario', 'Magsaysay', 'Mangyan Rd', 'Marymount', 'Melissa Dr', 'Narra', 'Nicanor Reyes', 'Osmena', 'Pajo', 'Palma', 'Parade loop', 'Park 9', 'President Carlos P. Garcia Ave', 'Quezon', 'Quirino', 'Quisumbing Drive', 'Rosa Alvero', 'Roxas', 'Seminary Rd', 'T. Evangelista', 'Thornton Drive', 'Topside Valley', 'University Road', 'Xavierville Ave', 'Zen Garden Path']
 
@@ -31,7 +31,7 @@ for e in property_name:
     lot_type = random.choice(['Dormitory','Condominium','Apartment','Boarding House'])
     lot_area = random.randrange(15,25,1)
     rate = random.randrange(1000,25000,250)
-    min_month_stay = random.choice([6,12,24])
+    min_month_stay = random.choice([6,12,999])
     num_bedrooms = random.randint(1, 3)
     num_bathrooms = random.randint(0, 1)
     occupancy = random.randint(1, 6)
@@ -51,12 +51,12 @@ for e in property_name:
         num_bathrooms = 1
         curfew = 0
         lot_area = random.randrange(20,40,1)
-        min_month_stay = random.choice([12,24])
+        min_month_stay = random.choice([12,999])
     else:
         rate = random.randrange(10000,25000,250)
         num_bathrooms = 1
         curfew = 0
-        min_month_stay = random.choice([12,24])
+        min_month_stay = random.choice([12,999])
 
     e.append(rate)                                      # rate
     e.append(lot_area)                                  # lot_area
@@ -101,8 +101,8 @@ for e in property_name:
     })
     properties.append(d)
 
-with open("sampledatabase.json", "w") as outfile:
-    outfile.write(json.dumps(properties, indent=4))
+with open("./sample_databasee/sampledatabase2.json", "w") as outfile:
+    outfile.write("{\n\"listings\":"+json.dumps(properties, indent=4)+"}")
 
     
 
