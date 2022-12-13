@@ -12,12 +12,26 @@ npm install
 
 Make sure you have installed all the dependencies in the package.json.
 
-### Server
+### JSON Server
 
-Run the json-server with
+1. Change the db_config.js to your desired database configuration. Below is the default config:
+
+```js
+host: 'winhost',                  
+user: 'wsl_root',                 
+password: 'password',             
+database: 'alternative_housing',
+port: 3306
+```
+
+2. Run the json-server from the terminal with
 
 ```bash
-npm run server
+json-server -p your_port --watch ./sample_databasee/sampledatabase2.json
+```
+
+```bash
+json-server -p 8080 --watch ./sample_databasee/sampledatabase2.json
 ```
 
 ### Client
@@ -27,4 +41,3 @@ Run React server with
 ```bash
 npm start
 ```
-
