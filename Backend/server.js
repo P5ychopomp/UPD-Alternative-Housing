@@ -81,7 +81,7 @@ function queryResults(req, res, next){
                 break;
             case "furnished":
                 req.sql += " AND furnishing = ?"
-                req.queryFilters.push(["None","Semi","Full"][req.query[key]])
+                req.queryFilters.push(["None","Semi","Full"][(req.query[key])%3])
                 break;
             case "curfew":
                 req.sql += " AND curfew = ?"
@@ -89,10 +89,11 @@ function queryResults(req, res, next){
                 break;
             case "type":
                 req.sql += " AND lot_type = ?"
-                req.queryFilters.push(["Condominuim", "Dormitory", "Apartment", "Boarding House"][req.query[key]])
+                req.queryFilters.push(["Condominium", "Dormitory", "Apartment", "Boarding House"][(req.query[key])%4])
                 break;
             case "occupancy":
-                // set operations?
+                req.sql += " AND occupancy <= ?"
+                req.queryFilters.push([1,10][(req.query[key])])
                 break;
             case "stay":
                 req.sql += " AND min_month_stay <= ?"
@@ -131,9 +132,4 @@ function queryProperty(req, res, next){
 }
 
 
-const PORT = 8080;
-const HOST = 'localhost';
-
-app.listen(PORT, HOST, () => {
-    console.log(`Server started on host ${HOST} port ${PORT}`);
-});
+app.listen(3000)
