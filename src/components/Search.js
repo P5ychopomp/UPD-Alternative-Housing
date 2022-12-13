@@ -1,6 +1,5 @@
-import { useEffect, useState} from 'react';
+import { useState} from 'react';
 import {ChakraProvider, Input, Container, Grid, GridItem} from '@chakra-ui/react';
-import SearchFilters from './SearchFilters';
 import Theme from './Theme';
 import { IoSearchCircle, IoFilter } from 'react-icons/io5';
 
