@@ -4,46 +4,77 @@ import { Text, RangeSlider,
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderMark,
-  Tooltip, Box, Flex, Center, Container, Stack, Checkbox, CheckboxGroup, Button } from '@chakra-ui/react';
+  Tooltip, Box, Flex, Center, Container, Stack, Checkbox, CheckboxGroup, Button} from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
-  const SearchFilters = ({ props, setProps, q, setQ }) => {
-  const [properties, setListings] = useState(props);
-  const [rate, setRate] = useState([0,50000]);
-  const [lotArea, setlotArea] = useState([0,50]);
+  const SearchFilters = ({ filters, setFilters }) => {
+
+  const [sf, setSf]  = useState({
+    sfrate : [0,50000],
+    sflotArea : [0,50],
+    sffurnishType : [],
+    sfcurfew : [],
+    sflotType : [],
+    sfoccupy : [],
+    sfminStay : [],
+    sfinclusion : []
+  });
+
+  const sessionHandler = (defaultValue) => {
+    const stored = sessionStorage.getItem("rawFilters");
+    if (!stored) {
+      return defaultValue;
+    }
+    return JSON.parse(stored);
+  }
+
+  const sh = sessionHandler(sf);
+  console.log(sh)
+  const [rate, setRate] = useState([sh.sfrate[0],sh.sfrate[1]]);
+  const [lotArea, setlotArea] = useState([sh.sflotArea[0],sh.sflotArea[1]]);
   const [furnishType, setFurnishType] = useState([]);
   const [curfew, setCurfew] = useState([]);
   const [lotType, setlotType] = useState([]);
   const [occupy, setOccupy] = useState([]);
   const [minStay, setMinStay] = useState([]);
   const [inclusion, setInclusion] = useState([]);
-  const [page, setPage] = useState(1);
-  const [url, setUrl] = useState(`http://192.168.1.100:8080/listings?_page=${page}&_sort=property_id&_order=desc&q=${q}`);
 
-  useEffect(() => {
-    const getListings = async () => {
-      const res = await fetch(url)
-      const data = await res.json()
-      setListings(data)
+  useEffect (() => {
+    const sf = {
+      sfrate : rate,
+      sflotArea : lotArea,
+      sffurnishType : furnishType,
+      sfcurfew : curfew,
+      sflotType : lotType,
+      sfoccupy : occupy,
+      sfminStay : minStay,
+      sfinclusion : inclusion
     }
-    getListings()
-  }, [url])
+    sessionStorage.setItem("rawFilters", JSON.stringify(sf))
+    sessionStorage.setItem("filters", JSON.stringify(filters))
+
+  }, [filters, curfew, furnishType, inclusion, lotArea, lotType, minStay, occupy, rate] )
+
   
 
   const handleFilterClick = () => {
-    let baseUrl = `http://192.168.1.100:8080/listings?_page=${page}&_sort=property_id&_order=desc&q=${q}&rate_gte=${rate[0]}&rate_lte=${rate[1]}&lot_area_gte=${lotArea[0]}&lot_area_lte=${lotArea[1]}`;
-    for(const e of furnishType) baseUrl+=`&furnishing=${e}`;
-    for(const e of curfew) baseUrl+=`&curfew=${e}`;
-    for(const e of lotType) baseUrl+=`&lot_type=${e}`;
-    for(const e of occupy) {e === '1' ? baseUrl+=`&occupancy=1` : baseUrl+=`&occupancy_gte=2`};
-    for(const e of minStay) baseUrl+=`&min_month_stay=${e}`;
-    for(const e of inclusion) baseUrl+=`&inclusions=${e}`;
-    setUrl(baseUrl);
+    let filters1 = `&rate_gte=${rate[0]}&rate_lte=${rate[1]}&lot_area_gte=${lotArea[0]}&lot_area_lte=${lotArea[1]}`;
+    for(const e of furnishType) filters1+=`&furnishing=${e}`;
+    for(const e of curfew) filters1+=`&curfew=${e}`;
+    for(const e of lotType) filters1+=`&lot_type=${e}`;
+    if (occupy.length === 1) {
+      for(const e of occupy) {e === '1' ? filters1+=`&occupancy=1` : filters1+=`&occupancy_gte=2`}}
+    else {
+      filters1+=`&occupancy_gte=1`
+    };
+    for(const e of minStay) filters1+=`&min_month_stay=${e}`;
+    for(const e of inclusion) filters1+=`&inclusions=${e}`;
+    setFilters(filters1);
   };
 
   return (
-    <Center>
-      <Container borderTop='none' borderBottomRadius='30px' borderWidth='3px' borderColor='gray.50' height='fit-content' pb='5' alignItems='stretch' minW='100%'>
+      <Center>
+      <Container borderTop='none' borderBottomRadius='30px' borderWidth='3px' borderColor='gray.50' height='fit-content' pb='5' pt='7' alignItems='stretch' minW='100%'>
         <Flex flexDirection='row' flexWrap={'wrap'} justify='center'>
           {/* Rate and Lot Area */}
           <Container width='11em' mr='5' ml='5'>
@@ -54,12 +85,12 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
             <RangeSlider
               mt='1.5em'
               id='slider'
-              defaultValue={[rate[0], rate[1]]}
+              defaultValue={[sh.sfrate[0], sh.sfrate[1]]}
               min={0}
               max={50000}
               step={500}
               onChange={(v) => setRate(v)}
-              onChangeEnd={(v) => setRate(v)}
+              onChangeEnd={(v) => {setRate(v)}}
             >
               <RangeSliderMark color='gray.500' value={50000} mt='-6' ml='-2' fontSize={'9'}>
               Max
@@ -78,7 +109,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
                 fontWeight='black'
                 shadow='none'
                 mt='-2'
-                label={`₱${rate[1]}`}
+                label={`₱${sh.sfrate[1]}`}
               >
                 <RangeSliderThumb bg='#7b1113'index={1}/>
               </Tooltip>
@@ -90,7 +121,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
                 fontWeight='black'
                 shadow='none'
                 mt='-2'
-                label={`₱${rate[0]}`}
+                label={`₱${sh.sfrate[0]}`}
               >
                 <RangeSliderThumb bg='#7b1113' index={0}/>
               </Tooltip>
@@ -106,7 +137,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
             <RangeSlider
               mt='1.5em'
               id='slider'
-              defaultValue={[lotArea[0], lotArea[1]]}
+              defaultValue={[sh.sflotArea[0], sh.sflotArea[1]]}
               min={0}
               max={50}
               onChange={(v) => setlotArea(v)}
@@ -129,7 +160,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
                 fontWeight='black'
                 shadow='none'
                 mt='-2'
-                label={`${lotArea[1]}`}
+                label={`${sh.sflotArea[1]}`}
               >
                 <RangeSliderThumb bg='#7b1113'index={1}/>
               </Tooltip>
@@ -141,7 +172,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
                 fontWeight='black'
                 shadow='none'
                 mt='-2'
-                label={`${lotArea[0]}`}
+                label={`${sh.sflotArea[0]}`}
               >
                 <RangeSliderThumb bg='#7b1113' index={0}/>
               </Tooltip>
@@ -242,14 +273,15 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
           <Button rightIcon={<ArrowForwardIcon />} colorScheme='upd' borderRadius='full' variant='outline' size='sm' 
           onClick={() => {
             handleFilterClick();
-            setProps(properties);
+            console.log(sessionStorage.getItem("rawFilters"))
           }}>
             Apply Filter
           </Button>
         </Flex>
         
       </Container>
-    </Center>
+      </Center>
+    
     
   )
 }

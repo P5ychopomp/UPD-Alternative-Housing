@@ -1,63 +1,52 @@
 import { BrowserRouter as Router} from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import ReactPaginate from "react-paginate";
+import { ChakraProvider, Container } from '@chakra-ui/react'
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import Navbar from './components/Navbar'
 import Listings from './components/Listings'
 import Search from './components/Search'
 import Footer from './components/Footer';
-import './App.css';
-import { Button, ChakraProvider, Container, Input, Spinner } from '@chakra-ui/react'
-import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import SearchFilters from './components/SearchFilters';
+import Theme from './components/Theme'
+import './styles/App.css';
+
 
 function App() {
   const [query, setQuery] = useState('');
   const [properties, setListings] = useState([]);
-  const [errMessage, setErrMessage] = useState('');
   const [pageCount, setpageCount] = useState(0);
   const [page, setPage] = useState(0);
+  const [searchFilters, setSearchFilters] = useState('');
+  const [sfVisible, setSfVisible] = useState(false);
 
   useEffect(() => {
       const getListings = async () => {
-        const res = await fetch(`http://192.168.1.100:8080/listings?_page=${page+1}&_sort=property_id&_order=desc&q=${query}`);
+        const res = await fetch(`http://192.168.1.100:8080/listings?_page=${page+1}&_sort=property_id&_order=desc&q=${query}${searchFilters}`);
         const data = await res.json();
-          const total = res.headers.get("x-total-count");
-          setpageCount(Math.ceil(total / 10));
-          setListings(data);
+        const total = res.headers.get("x-total-count");
+        setpageCount(Math.ceil(total / 10));
+        setListings(data);
       }
       getListings()
-  }, [query,page])
 
-  const fetchListings = async (currentPage) => {
-      const res = await fetch(`http://192.168.1.100:8080/listings?_page=${currentPage}&_sort=property_id&_order=desc&q=${query}`);
-      if (res.status !== 200) {
-        const err = await res.json();
-        setErrMessage('Error: '+err);
-        // eslint-disable-next-line no-throw-literal
-        throw {message: err.message, status:err.cod};
-      } 
-      const data = await res.json();
-      data.length === 0 ? setErrMessage('No data fetched :<') : setErrMessage('');
-      return data;
-  };
+  }, [query,page,searchFilters])
 
   const handlePageClick = async (data) => {
-    console.log(data.selected);
-
-    let currentPage = data.selected + 1;
-
     setPage(data.selected);
-
-    const FromServer = await fetchListings(currentPage);
-
-    setListings(FromServer);
   };
   
     return (
       <Router>
       <Navbar />
       <div className='container'>
-        <Search properties={properties} setProperties={setListings} query={query} setQuery={setQuery}/>
-        <Container mb='2em' centerContent>
+        <ChakraProvider theme={Theme}>
+          <Search query={query} setQuery={setQuery} sfVisible={sfVisible} setSfVisible={setSfVisible}/>
+          {sfVisible && <Container minWidth='90%' mt='-5'>
+            <SearchFilters setFilters={setSearchFilters} filters={searchFilters}/>
+          </Container>}
+          </ChakraProvider>
+        <Container mt='2em' mb='2em' centerContent>
           <ReactPaginate
             previousLabel={<ArrowBackIcon style={{ fontSize: 18 }} />}
             nextLabel={<ArrowForwardIcon style={{ fontSize: 18 }} />}
@@ -81,7 +70,6 @@ function App() {
           />
         </Container>
         <Listings properties={properties}/>
-        {errMessage && (<Container centerContent> {errMessage} </Container>)}
         <Container mt='5em' centerContent>
           <ReactPaginate
             previousLabel={<ArrowBackIcon style={{ fontSize: 18 }} />}
@@ -105,6 +93,7 @@ function App() {
             forcePage={(page)}
           />
         </Container>
+        
       </div>
       <Footer />
     </Router>

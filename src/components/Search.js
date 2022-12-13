@@ -1,17 +1,16 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState} from 'react';
 import {ChakraProvider, Input, Container, Grid, GridItem} from '@chakra-ui/react';
 import SearchFilters from './SearchFilters';
 import Theme from './Theme';
 import { IoSearchCircle, IoFilter } from 'react-icons/io5';
 
-const Search = ({ properties, setProperties, query, setQuery }) => {
-  const [searchFilters, setSearchFilters] = useState(false);
+const Search = ({ sfVisible, setSfVisible, query, setQuery }) => {
   const [keywords, setKeywords] = useState(query);
 
   return (
     <div>
         <ChakraProvider theme={Theme} >
-          <Container maxW='80%' mb='10'>
+          <Container minW='90%'>
             <Grid
               templateColumns='2.5em 1fr 3em'
               alignItems='center'
@@ -31,7 +30,7 @@ const Search = ({ properties, setProperties, query, setQuery }) => {
                   color='#58152e'
                   cursor='pointer'
                   size={20}
-                  onClick={() => setSearchFilters(!searchFilters)}
+                  onClick={() => setSfVisible(!sfVisible)}
                 /> 
               </GridItem>
               <GridItem>
@@ -60,7 +59,7 @@ const Search = ({ properties, setProperties, query, setQuery }) => {
                     onClick={()=> setQuery(keywords)}/>
               </GridItem>
             </Grid>
-            {searchFilters && <SearchFilters props={properties} setProps={setProperties} q={query} setQ={setQuery} />}
+            
           </Container>
         </ChakraProvider>
     </div>
