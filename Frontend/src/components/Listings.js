@@ -10,7 +10,7 @@ const Listings = ({ properties }) => {
             <Container minWidth='100%' alignItems='center' justifyContent='center' centerContent >
                 <Flex flexWrap='wrap' justifyContent='center' gap={6}>
                     {properties.map((property) => (
-                        <div key={property.property_id}>
+                        <div key={property.property_id} onclick="window.scrollTo(0, 0);">
                             <Link to={{
                                 pathname: `/${property.property_id}`,
                             }

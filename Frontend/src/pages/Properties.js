@@ -2,7 +2,7 @@ import { React, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { fetchBaseUrl } from '../utils/FetchBaseUrl';
 
-const Properties = (props) => {
+const Properties = () => {
   const { id } = useParams();
   const [data, setData] = useState({});
 
@@ -11,10 +11,11 @@ const Properties = (props) => {
       const res = await fetch(`${fetchBaseUrl}/${id}`);
       const data = await res.json();
       setData(data);
+      window.scrollTo(0, 0)
     }
     getListings()
 
-  }, [])
+  }, [id])
 
   return (
     <div style={{ marginTop: "5em" }}>{JSON.stringify(data)}</div>
