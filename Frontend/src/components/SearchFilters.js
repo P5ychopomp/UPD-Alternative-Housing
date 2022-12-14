@@ -64,8 +64,8 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
     for (const e of furnishType) filters1 += `&furnished=${e}`;
     for (const e of curfew) filters1 += `&curfew=${e}`;
     for (const e of lotType) filters1 += `&type=${e}`;
-    for (const e of occupy) e === '0' ? filters1 += `&occupancy=0` : filters1 += `&occupancy=1`
-    for (const e of minStay) e === '0' ? filters1 += `&stay=6` : e === '1' ? filters1 += `&stay=12` : filters1 += `&stay=24`;
+    for (const e of occupy) filters1 += `&occupancy=${e}`;
+    for (const e of minStay) filters1 += `&stay=${e}`;
     for (const e of inclusion) filters1 += `&inclusions=${e}`;
     setFilters(filters1);
     setPage(0);
@@ -233,8 +233,8 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
               </Text >
               <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setOccupy(v) }} defaultValue={sh.sfoccupy} value={occupy}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='1'>Solo</Radio>
-                  <Radio value='2'>Shared</Radio>
+                  <Radio value='0'>Solo</Radio>
+                  <Radio value='1'>Shared</Radio>
                 </Stack>
               </RadioGroup>
             </Box>
