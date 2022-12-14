@@ -8,10 +8,12 @@ const Properties = () => {
 
   useEffect(() => {
     const getListings = async () => {
-      const res = await fetch(`${fetchBaseUrl}/${id}`);
-      const data = await res.json();
-      setData(data);
-      window.scrollTo(0, 0)
+      if (/^-?\d+$/.test(id) === true) {
+        const res = await fetch(`${fetchBaseUrl}/${id}`);
+        const data = await res.json();
+        setData(data);
+        window.scrollTo(0, 0)
+      }
     }
     getListings()
 

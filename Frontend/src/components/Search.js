@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ChakraProvider, Input, Container, Grid, GridItem } from '@chakra-ui/react';
 import Theme from './Theme';
 import { IoSearchCircle, IoFilter } from 'react-icons/io5';
