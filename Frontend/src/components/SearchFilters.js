@@ -260,11 +260,11 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
               </Text >
               <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setInclusion(v) }} defaultValue={sh.sfinclusion} value={inclusion}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='a1'>Electricity</Radio>
-                  <Radio value='a2'>Water</Radio>
-                  <Radio value='a3'>Own Wifi</Radio>
-                  <Radio value='a4'>Own Kitchen</Radio>
-                  <Radio value='a5'>Parking</Radio>
+                  <Radio value='0'>Electricity</Radio>
+                  <Radio value='1'>Water</Radio>
+                  <Radio value='2'>Own Wifi</Radio>
+                  <Radio value='3'>Own Kitchen</Radio>
+                  <Radio value='4'>Parking</Radio>
                 </Stack>
               </RadioGroup>
             </Box>
