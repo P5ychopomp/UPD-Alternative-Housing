@@ -17,8 +17,8 @@ Make sure you have installed all the dependencies in the package.json.
 1. Change the db_config.js to your desired database configuration. Below is the default config:
 
 ```js
-host: 'winhost',                  
-user: 'wsl_root',                 
+host: 'localhost',                  
+user: 'root',                 
 password: 'password',             
 database: 'alternative_housing',
 port: 3306

@@ -59,8 +59,11 @@ function queryResults(req, res, next){
         // for each valid filter, add search key and value to sql statement
         switch(key) {
             case "q":
-                req.sql += " AND property_name LIKE ?"
+                req.sql += " AND (property_name LIKE ? OR street_address LIKE ? OR brgy LIKE ? OR city_municip LIKE ?)"
                 req.query.q="%" + req.query.q + "%"
+                req.queryFilters.push(req.query[key])
+                req.queryFilters.push(req.query[key])
+                req.queryFilters.push(req.query[key])
                 req.queryFilters.push(req.query[key])
                 break;
             case "ratemin":       
@@ -108,6 +111,8 @@ function queryResults(req, res, next){
         }
     }
 
+    req.sql += " LIMIT 20"
+
     // log sql query statement
     console.log('request validated.')
     console.log(req.sql)      
@@ -132,4 +137,4 @@ function queryProperty(req, res, next){
 }
 
 
-app.listen(3000)
+app.listen(3001)
