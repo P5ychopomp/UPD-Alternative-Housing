@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install the required dependencies in the package.json with
+For each directory (Frontend/ and Backend/) in the root folder, install the required dependencies using:
 
 ```bash
 npm install
@@ -10,11 +10,12 @@ npm install
 
 ## Usage
 
-Make sure you have installed all the dependencies in the package.json.
+Make sure you have installed all the dependencies in the package.json of each directory
 
-### JSON Server
+### Database
+1. The repository includes a sample database with fictitious listings in `/Backend/sample_databasee/AltHousingSampleDB.sql`. The script in `AltHousingSampleDB.sql` may be used to import the sample database into MySQL
 
-1. Change the db_config.js to your desired database configuration. Below is the default config:
+2. Change the db_config.js to your desired database configuration. Below is the default config:
 
 ```js
 host: 'localhost',                  
@@ -24,20 +25,17 @@ database: 'alternative_housing',
 port: 3306
 ```
 
-2. Run the json-server from the terminal with
-
+### API Server
+Start the server by going to the `Backend` directory and running
 ```bash
-json-server -p your_port --watch ./sample_databasee/sampledatabase2.json
+npm start
 ```
-
-```bash
-json-server -p 8080 --watch ./sample_databasee/sampledatabase2.json
-```
-
 ### Client
 
-Run React server with
+Start the React server by going to the `Frontend` directory and running
 
 ```bash
 npm start
 ```
+
+After this, the webpage may be accessed through `localhost:3000`
