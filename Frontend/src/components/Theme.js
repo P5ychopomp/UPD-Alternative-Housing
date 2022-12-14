@@ -17,9 +17,9 @@ const Theme = extendTheme({
       700: '#792E3F',
       800: '#692338',
       900: '#58152E'
-    } 
+    }
   }
-  
+
 })
 
 export default Theme
