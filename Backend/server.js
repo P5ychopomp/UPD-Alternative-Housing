@@ -97,12 +97,12 @@ function queryResults(req, res, next){
                 req.queryFilters.push(["Condominium", "Dormitory", "Apartment", "Boarding House"][(req.query[key])%4])
                 break;
             case "occupancy":
-                req.sql += " AND occupancy <= ?"
-                req.queryFilters.push([1,10][(req.query[key])])
+                req.sql += req.query[key]==1 ? " AND occupancy > 1" : " AND occupancy <= 1"
                 break;
             case "stay":
-                req.sql += " AND min_month_stay <= ?"
-                req.queryFilters.push(req.query[key])
+                req.sql += " AND min_month_stay >= ? AND min_month_stay <= ?"
+                req.queryFilters.push([0,7,13][req.query[key]])
+                req.queryFilters.push([6,12,24][req.query[key]])
                 break;
             case "inclusions":
                 // set operations?
