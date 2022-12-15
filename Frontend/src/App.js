@@ -12,6 +12,12 @@ import Theme from './components/Theme';
 import Properties from './pages/Properties';
 import Faqs from './pages/Faqs';
 import About from './pages/About';
+import TermsofService from './pages/TermsofService';
+import Privacy from './pages/Privacy';
+import ContactUs from './pages/ContactUs';
+import PostingGuides from './pages/PostingGuides';
+import Safety from './pages/Safety';
+import SearchGuides from './pages/SearchGuides';
 import { fetchBaseUrl } from './utils/FetchBaseUrl';
 import './styles/App.css';
 
@@ -112,6 +118,12 @@ function App() {
             <Route path='/AboutUs' element={<About />} />
             <Route path='/Faqs' element={<Faqs />} />
             <Route path='/:id' element={<Properties />} />
+            <Route path='/TermsofService' element={<TermsofService />} />
+            <Route path='/Privacy' element={<Privacy />} />
+            <Route path='/ContactUs' element={<ContactUs />} />
+            <Route path='/PostingGuides' element={<PostingGuides />} />
+            <Route path='/SearchGuides' element={<SearchGuides />} />
+            <Route path='/Safety' element={<Safety />} />
           </Routes>
         </div>
       </div>
