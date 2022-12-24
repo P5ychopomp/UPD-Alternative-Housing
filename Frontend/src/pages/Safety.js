@@ -1,6 +1,5 @@
 import { Box, Container } from '@chakra-ui/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 const Safety = () => {
   return (
@@ -8,7 +7,6 @@ const Safety = () => {
       <Box mb='50'>
         <h1>Safety</h1>
       </Box>
-      <Link to="/">Home</Link>
     </Container>
   )
 }
