@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Image } from '@chakra-ui/react';
 import './styles/Navbar.css';
 
 function Navbar() {
@@ -11,8 +12,10 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-            <img className="navbar-logo" src="USC-logo.png" alt="USC Logo"/>
-            <h1 className="navbar-title">Alternative <br /> Housing Portal</h1>
+            
+            <Link to="/">
+                <Image className="navbar-logo" src="USC-logo2.png" alt="USC Logo" height="5em"/>
+            </Link>
                 <div className='menu-icon' onClick={handleClick}>
                     <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                 </div>
