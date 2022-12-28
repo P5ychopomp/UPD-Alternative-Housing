@@ -1,15 +1,14 @@
 import { Box, Container } from '@chakra-ui/react'
+import React from 'react'
 
-const About = () => {
+const PostingGuides = () => {
   return (
-
     <Container mt='60' alignItems='center' centerContent>
       <Box mb='50'>
-        <h1>About Us</h1>
-        <h2>Version 1.0.0</h2>
+        <h1>Posting Guides</h1>
       </Box>
     </Container>
   )
 }
 
-export default About
+export default PostingGuides
