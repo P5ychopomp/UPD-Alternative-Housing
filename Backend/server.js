@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 var cors = require('cors');
+require("dotenv").config();
 app.use(cors());
 // const db = require('./database')
 //app.use(express.static("public"))
@@ -13,13 +14,11 @@ app.get("/results", (req,res)=>{ // results page
     res.sendFile('public/results.html',{root: __dirname})
 })
 
-const mysql = require('mysql2');
-const config = require('./db_config');
-const db = mysql.createConnection(config.db);
+const pool = require('./db_config')
 
 // search results request
 app.get("/api/listings", queryResults, (req,res)=>{
-    db.query(req.sql, req.queryFilters, function(err, data, fields) {
+    pool.query(req.sql, req.queryFilters, function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
@@ -27,7 +26,7 @@ app.get("/api/listings", queryResults, (req,res)=>{
 
 // property details request given property_id
 app.get("/api/listings/:id", queryResults, (req,res)=>{
-    db.query(req.sql, req.queryFilters, function(err, data, fields) {
+    pool.query(req.sql, req.queryFilters, function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
@@ -161,7 +160,7 @@ class sqlQuery{
             this.queryFilters=this.queryFilters.concat(this[key].getFormatted()); 
             this.sql+=this[key].getFilter();
         }
-        this.sql+=this.limit; // add limit to db query result
+        this.sql+=this.limit; // add limit to pool query result
     }
 
     getSQL(){
