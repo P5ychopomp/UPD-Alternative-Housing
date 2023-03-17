@@ -1,10 +1,16 @@
 const express = require('express')
 const app = express()
+const pool = require('./db_config')
+const bcrypt = require("bcrypt");
 var cors = require('cors');
 require("dotenv").config();
 app.use(cors());
-// const db = require('./database')
-//app.use(express.static("public"))
+app.use(express.urlencoded({ extended: false }));
+
+
+// User authentication routes
+var authRouter = require('./routes/auth');
+app.use('/', authRouter);
 
 app.get("/", (req,res)=>{ // home page
     res.sendFile('public/index.html',{root: __dirname})
@@ -14,7 +20,6 @@ app.get("/results", (req,res)=>{ // results page
     res.sendFile('public/results.html',{root: __dirname})
 })
 
-const pool = require('./db_config')
 
 // search results request
 app.get("/api/listings", queryResults, (req,res)=>{
