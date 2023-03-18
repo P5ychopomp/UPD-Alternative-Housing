@@ -1,19 +1,55 @@
-const express = require('express')
-const app = express()
-const pool = require('./db_config')
-const bcrypt = require("bcrypt");
-var cors = require('cors');
+const express = require('express');
+const app = express();
 require("dotenv").config();
+
+const pool = require('./db_config').pool;
+const session = require("express-session");
+const bcrypt = require("bcrypt");
+
+var cors = require('cors');
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 
+// Session Storage
+const sessionStore = require('./db_config').sessionStore;
+app.use(
+    session({
+      // Key we want to keep secret which will encrypt all of our information
+      secret: process.env.SESSION_SECRET,
+      // Should we resave our session variables if nothing has changes
+      resave: false,
+      // Save empty value if there is no value
+      saveUninitialized: false,
+      // Use the mysql session store
+      store: sessionStore
+    })
+  );
 
 // User authentication routes
-var authRouter = require('./routes/auth');
+var authRouter = require('./routes/auth').router;
 app.use('/', authRouter);
 
+/*** DASHBOARD ***/
+var checkNotAuthenticated = require('./routes/auth').checkNotAuthenticated;
+
+app.get("/dashboard", checkNotAuthenticated, (req, res) => {
+        const user = req.user;
+        res.send(`
+        <h1>DASHBOARD</h1>
+        <ul>
+        <li> Name: ${user.name} </li>
+        <li> Email:${user.email} </li>
+        </ul>
+        <form action="/logout" method="post">
+        <button class="logout" type="submit">Logout</button>
+        </form>
+        `)
+});
+
+
+/*** RESULTS PAGE ***/
 app.get("/", (req,res)=>{ // home page
-    res.sendFile('public/index.html',{root: __dirname})
+    res.send('<h1>Index Page</h1>')
 })
 
 app.get("/results", (req,res)=>{ // results page
