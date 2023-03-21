@@ -163,16 +163,15 @@ router.post(
 );
 
 /***** USER LOGOUT*****/
-router.post('/logout', (req, res)=>{
-    req.session.destroy(err => {
-        if(err){
-            return res.redirect('/')
-        }
-        sessionStore.close()
-        res.clearCookie(process.env.SESS_NAME)
-        res.redirect('/login')
-    })
-})
+router.post('/logout', function(req, res, next){
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+});
 
 // Middleware
 function checkAuthenticated(req, res, next) {
@@ -183,6 +182,7 @@ function checkAuthenticated(req, res, next) {
   }
   
 function checkNotAuthenticated(req, res, next) {
+  console.log("Check Not Authenticated: ", req.isAuthenticated); 
 	if (req.isAuthenticated()) {
 	  return next();
 	}

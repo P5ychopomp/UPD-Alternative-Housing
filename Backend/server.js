@@ -5,6 +5,10 @@ require("dotenv").config();
 const pool = require('./db_config').pool;
 const session = require("express-session");
 const bcrypt = require("bcrypt");
+var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
+var ensureLoggedIn = ensureLogIn();
+
+
 
 var cors = require('cors');
 app.use(cors());
@@ -30,9 +34,8 @@ var authRouter = require('./routes/auth').router;
 app.use('/', authRouter);
 
 /*** DASHBOARD ***/
-var checkNotAuthenticated = require('./routes/auth').checkNotAuthenticated;
 
-app.get("/dashboard", checkNotAuthenticated, (req, res) => {
+app.get("/dashboard", ensureLoggedIn, (req, res) => {
         const user = req.user;
         res.send(`
         <h1>DASHBOARD</h1>
