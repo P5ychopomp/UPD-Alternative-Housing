@@ -163,10 +163,7 @@ router.post(
 );
 
 /***** USER LOGOUT*****/
-router.post('/logout', function(req, res, next){
-  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.set('Pragma', 'no-cache');
-  res.set('Expires', '0');
+router.post('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
     res.redirect('/');

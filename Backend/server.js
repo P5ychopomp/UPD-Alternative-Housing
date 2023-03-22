@@ -8,8 +8,6 @@ const bcrypt = require("bcrypt");
 var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 
-
-
 var cors = require('cors');
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -36,8 +34,10 @@ app.use('/', authRouter);
 /*** DASHBOARD ***/
 
 app.get("/dashboard", ensureLoggedIn, (req, res) => {
-        const user = req.user;
-        res.send(`
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate');
+    const user = req.user;
+    res.send(`
+        <meta http-equiv="Cache-Control" content="no-cache, no-store">
         <h1>DASHBOARD</h1>
         <ul>
         <li> Name: ${user.name} </li>
@@ -46,7 +46,7 @@ app.get("/dashboard", ensureLoggedIn, (req, res) => {
         <form action="/logout" method="post">
         <button class="logout" type="submit">Logout</button>
         </form>
-        `)
+    `)
 });
 
 
