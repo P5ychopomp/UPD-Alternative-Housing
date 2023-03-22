@@ -61,16 +61,37 @@ app.get("/results", (req,res)=>{ // results page
 
 
 // search results request
-app.get("/api/listings", queryResults, (req,res)=>{
-    pool.query(req.sql, req.queryFilters, function(err, data, fields) {
+app.get("/api/listings", queryResults, queryDB, (req,res)=>{
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
 // property details request given property_id
-app.get("/api/listings/:id", queryResults, (req,res)=>{
-    pool.query(req.sql, req.queryFilters, function(err, data, fields) {
+app.get("/api/listings/:pid", queryResults, queryDB, (req,res)=>{
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/update", updateProperty, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/delete", deleteProperty, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
@@ -97,7 +118,7 @@ class queryField{
 
 class keyword extends queryField{
     constructor(value){
-        super(" AND (property_name LIKE ? OR street_address LIKE ? OR brgy LIKE ? OR city_municip LIKE ?)", value);
+        super("(property_name LIKE ? OR street_address LIKE ? OR brgy LIKE ? OR city_municip LIKE ?)", value);
     }
     getFormatted(){
         return ["%"+this.value+"%","%"+this.value+"%","%"+this.value+"%","%"+this.value+"%"];
@@ -106,51 +127,51 @@ class keyword extends queryField{
 
 class ratemin extends queryField{
     constructor(value){
-        super(" AND rate >= ?", value);
+        super("rate >= ?", value);
     }
 }
 
 class ratemax extends queryField{
     constructor(value){
-        super(" AND rate <= ?", value);
+        super("rate <= ?", value);
     }
 }
 
 class lotmin extends queryField{
     constructor(value){
-        super(" AND lot_area >= ?", value);
+        super("lot_area >= ?", value);
     }
 }
 
 class lotmax extends queryField{
     constructor(value){
-        super(" AND lot_area <= ?", value);
+        super("lot_area <= ?", value);
     }
 }
 
 class furnished extends queryField{
     constructor(value){
-        super(" AND furnishing = ?", value);
+        super("furnishing = ?", value);
     }
 }
 class curfew extends queryField{
     constructor(value){
-        super(" AND curfew = ?", value);
+        super("curfew = ?", value);
     }
 }
 class type extends queryField{
     constructor(value){
-        super(" AND lot_type = ?", value);
+        super("lot_type = ?", value);
     }
 }
 class occupancy extends queryField{
     constructor(value){
-        super(value==1 ? " AND occupancy > 1" : " AND occupancy <= 1", value);
+        super(value==1 ? "occupancy > 1" : "occupancy <= 1", value);
     }
 }
 class stay extends queryField{
     constructor(value){
-        super(" AND min_month_stay >= ? AND min_month_stay <= ?", value);
+        super("min_month_stay >= ? AND min_month_stay <= ?", value);
     }
 }
 class amenities extends queryField{
@@ -160,17 +181,87 @@ class amenities extends queryField{
 }
 class propertyID extends queryField{
     constructor(value){
-        super(" AND property_id = ?", value);
+        super("property_id = ?", value);
+    }
+}
+
+class landlordID extends queryField{
+    constructor(value){
+        super("landlord_id = ?", value);
+    }
+}
+
+class updateField extends queryField{
+    constructor(filter, value){
+        super(filter+" = ?", value);
+    }
+}
+
+
+class Property{
+    constructor(fields){
+        this.pid = new queryField(fields.pid);   // property ID
+        this.pname = new queryField(fields.pname);
+        this.add = new queryField(fields.add);
+        this.brgy =new queryField(fields.brgy);
+        this.city =new queryField(fields.city);
+        this.area = new queryField(fields.city);
+        this.type = new queryField(fields.type);
+        this.minstay = new queryField(fields.minstay);
+        this.curfew = new queryField(fields.curfew);
+        this.other = new queryField(fields.other);
+        this.img = new queryField(fields.img);
+        this.date = new queryField(fields.date);
+        this.lid = new queryField(fields.lid);
     }
 }
 
 class sqlQuery{
-    sql="SELECT * FROM properties WHERE 1";
+    queryValues=[];
     queryFilters=[];
-    limit = " LIMIT 20";
 
-    constructor(fields){
+    constructor(clause, fields){
+        this.sql = clause;
         this.req = fields;
+    }
+
+    noSpecialCharacters(data){
+        let c='';
+        if(c = data.match(/[`'/\*%;\+\|\<\>=!\.\-]/)){ // special characters to avoid
+            console.log(`Illegal character found: ${c} in ${data}`)
+            return 0;
+        }
+        return 1;
+    }
+
+    formatFilters(key){
+        this.queryValues=this.queryValues.concat(this[key].getFormatted()); 
+        this.queryFilters=this.queryFilters.concat(this[key].getFilter());
+    }
+
+    build(){
+        for (let key of Object.keys(this.req)){    // append each filter parameter in request to sql statement
+            // guard clause against special characters
+            if (!this.noSpecialCharacters(String(this[key].getValue()))){
+                return 400;
+            }
+            this.formatFilters(key);
+        }
+    }
+
+    getSQL(){
+        return this.sql;
+    }
+
+    getValues(){
+        return this.queryValues;
+    }
+}
+
+class propertyQuery extends sqlQuery{
+    constructor(fields){
+        super("SELECT * FROM properties WHERE ", fields);
+
         this.q = new keyword(fields.q);
         this.ratemin = new ratemin(fields.ratemin);
         this.ratemax=new ratemax(fields.ratemax); 
@@ -183,36 +274,95 @@ class sqlQuery{
         this.stay=new stay([[0,7,13][fields.stay], [6,12,24][fields.stay]]);
         this.a=new amenities(fields.a);
 
-        this.id=new propertyID(fields.id);
-    }
-
-    noSpecialCharacters(data){
-        let c='';
-        if(c = data.match(/[`'/\*%;\+\|\<\>=!\.\-]/)){ // special characters to avoid
-            console.log(`Illegal character found: ${c} in ${data}`)
-            return 0;
-        }
-        return 1;
+        this.pid=new propertyID(fields.pid);   // property ID
+        this.lid= new landlordID(fields.lid);  // landlord ID
     }
 
     build(){
-        for (let key of Object.keys(this.req)){    // append each filter parameter in request to sql statement
-            // guard clause against special characters
-            if (!this.noSpecialCharacters(String(this[key].getValue()))){
-                return 400;
-            }
-            this.queryFilters=this.queryFilters.concat(this[key].getFormatted()); 
-            this.sql+=this[key].getFilter();
-        }
-        this.sql+=this.limit; // add limit to pool query result
+        super.build();
+        this.sql+=this.queryFilters.join(" AND ");
+        this.sql+=" LIMIT 20"; // add limit to db query result
     }
+}
 
-    getSQL(){
-        return this.sql;
+// NOTE: implement transactions; can this be refactored using class Property?
+class updateQuery extends sqlQuery{
+    constructor(fields){
+        super("UPDATE properties SET ", fields);
+
+        this.pid = new queryField("property_id",fields.pid);   // property ID
+        this.pname = new updateField("property_name",fields.pname);
+        this.add = new updateField("street_address",fields.add);
+        this.brgy =new updateField("municip_brgy",fields.brgy);
+        this.city =new updateField("city",fields.city);
+        this.area = new updateField("lot_area",fields.city);
+        this.type = new updateField("lot_type",fields.type);
+        this.minstay = new updateField("min_stay",fields.minstay);
+        this.curfew = new updateField("curfew",fields.curfew);
+        this.other = new updateField("other_details",fields.other);
+        this.img = new updateField("img_url",fields.img);
+        this.date = new updateField("date_posted",fields.date);
+        this.lid = new updateField("landlord_id",fields.lid);
     }
+    formatFilters(key){
+        if (key=="pid")
+            return;
+        super.formatFilters(key);
+    }
+    build(){
+        super.build();
+        this.sql+=this.queryFilters.join(", ");
+        this.sql += " WHERE property_id = ?"
+        this.queryValues.push(this.pid.getValue());
+    }
+}
 
-    getFilter(){
-        return this.queryFilters;
+// NOTE: implement transactions; can this be refactored using class Property?
+class insertQuery extends sqlQuery{
+    v = [];
+    constructor(fields){
+        super("INSERT INTO properties ", fields);
+
+        this.pid = new queryField("property_id",fields.pid);   // property ID
+        this.pname = new queryField("property_name",fields.pname);
+        this.add = new queryField("street_address",fields.add);
+        this.brgy =new queryField("municip_brgy",fields.brgy);
+        this.city =new queryField("city",fields.city);
+        this.area = new queryField("lot_area",fields.city);
+        this.type = new queryField("lot_type",fields.type);
+        this.minstay = new queryField("min_stay",fields.minstay);
+        this.curfew = new queryField("curfew",fields.curfew);
+        this.other = new queryField("other_details",fields.other);
+        this.img = new queryField("img_url",fields.img);
+        this.date = new queryField("date_posted",fields.date);
+        this.lid = new queryField("landlord_id",fields.lid);
+    }
+    formatFilters(key){
+        super.formatFilters(key);
+        this.v.push("?");
+    }
+    build(){
+        super.build();
+        this.sql +="(" + this.queryFilters.join(", ") + ") VALUES (" + this.v.join(",") + ")";
+    }
+}
+
+class deleteQuery extends sqlQuery{
+    constructor(fields){
+        super("DELETE FROM properties ", fields);
+
+        this.pid =  new queryField("property_id",fields.pid);   // property ID
+    }
+    formatFilters(key){
+        if (key=="pid")
+            return;
+        super.formatFilters(key);
+    }
+    build(){
+        super.build();
+        this.sql+=this.queryFilters.join(", ");
+        this.sql += " WHERE property_id = ?"
+        this.queryValues.push(this.pid.getValue());
     }
 }
 
@@ -221,19 +371,35 @@ class sqlQuery{
 // set up query for list of properties given set of filters
 // input validation: allowlisting, placeholders, illegal characters
 function queryResults(req, res, next){
-    let sql = new sqlQuery({...req.query, ...req.params}); // include req.params
-    if (sql.build()==400){
-        return res.status(400).json({ err: "Bad Request"});
-    }
-    req.sql=sql.getSQL();
-    req.queryFilters=sql.getFilter();
-
-    // log sql query statement
-    console.log('request validated.')
-    console.log(req.sql)      
-    console.log(req.queryFilters)
+    req.sql = new propertyQuery({...req.query, ...req.params}); // include req.params
     next();
 }
 
+function updateProperty(req, res, next){
+    req.sql = new updateQuery(req.query);
+    next();
+}
+
+function insertProperty(req, res, next){
+    req.sql = new insertQuery(req.query);
+    next();
+}
+
+function deleteProperty(req, res, next){
+    req.sql = new deleteQuery(req.query);
+    next();
+}
+
+function queryDB(req, res, next){
+    if (req.sql.build()==400){
+        return res.status(400).json({ err: "Bad Request"});
+    }
+
+    // log sql query statement
+    console.log('request validated.')
+    console.log(req.sql.getSQL())      
+    console.log(req.sql.getValues())
+    next();
+}
 
 app.listen(3001)
