@@ -13,9 +13,7 @@ import SearchGuides from './pages/SearchGuides';
 import Home from './pages/Home';
 import './styles/App.css';
 import { Card, CardBody, Center, ChakraProvider, Container, HStack, Image, Text, VStack } from '@chakra-ui/react';
-import LandlordRegister from './pages/Landlord/LandlordRegister';
-
-
+import LandlordRegistration from './pages/Landlord/LandlordRegistration';
 
 const App = () => {
   return (
@@ -56,7 +54,7 @@ const App = () => {
                           </CardBody>
                       </Card>
                     </Link> 
-                    <Link to='/Register' variant='unstyled'>               
+                    <Link to='/LandlordRegister' variant='unstyled'>               
                       <Card maxW='sm'>
                           <CardBody>
                           <HStack>
@@ -74,7 +72,8 @@ const App = () => {
                 </Center>
               </div>
               } />
-              <Route path='/Register' element={<LandlordRegister />} />
+              
+              <Route path='/LandlordRegister' element={<LandlordRegistration />} />
               <Route path='/Home' element={<Home />} />
               <Route path='/AboutUs' element={<About />} />
               <Route path='/Faqs' element={<Faqs />} />
