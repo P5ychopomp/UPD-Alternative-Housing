@@ -120,6 +120,13 @@ app.get("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ /
         res.json({data})
     })
 })
+app.get("/api/test", (req,res)=>{ // should be POST
+    //console.log(req.query);
+    for (let key of req.query.furnished){
+        console.log(req.query.furnished.length);
+    }
+    res.json(req.query);
+})
 
 class queryField{
     constructor(filter, value){
@@ -176,6 +183,19 @@ class lotmax extends queryField{
 class furnished extends queryField{
     constructor(value){
         super("furnishing = ?", value);
+        this.sql=[];
+        this.v=[];
+        if (this.value != null){
+            for (let key of this.value){
+                this.sql.push(this.filter);
+                this.v.push(["None","Semi","Full"][key]);
+            }
+            this.filter=this.sql.join(" OR ");
+            console.log(this.filter);
+        }
+    }
+    getFormatted(){
+        return this.v;
     }
 }
 class curfew extends queryField{
@@ -186,6 +206,19 @@ class curfew extends queryField{
 class type extends queryField{
     constructor(value){
         super("lot_type = ?", value);
+        this.sql=[];
+        this.v=[];
+        if (this.value != null){
+            for (let key of this.value){
+                this.sql.push(this.filter);
+                this.v.push(["Condominium","Dormitory","Apartment","Boarding House"][key]);
+            }
+            this.filter=this.sql.join(" OR ");
+            console.log(this.filter);
+        }
+    }
+    getFormatted(){
+        return this.v;
     }
 }
 class occupancy extends queryField{
@@ -195,12 +228,39 @@ class occupancy extends queryField{
 }
 class stay extends queryField{
     constructor(value){
-        super("min_month_stay >= ? AND min_month_stay <= ?", value);
+        super("(min_month_stay >= ? AND min_month_stay <= ?)", value);
+        this.sql=[];
+        this.v=[];
+        if (this.value != null){
+            for (let key of this.value){
+                this.sql.push(this.filter);
+                this.v.push([0,7,13][key]);
+                this.v.push([6,12,24][key]);
+            }
+            this.filter=this.sql.join(" OR ");
+            console.log(this.filter);
+        }
+    }
+    getFormatted(){
+        return this.v;
     }
 }
 class amenities extends queryField{
     constructor(value){
-        super("", value);
+        super("FIND_IN_SET(?, inclusion)", value);
+        this.sql=[];
+        this.v=[];
+        if (this.value != null){
+            for (let key of this.value){
+                this.sql.push(this.filter);
+                this.v.push(["Electricity","Water","WiFi","Kitchen","Parking"][key]);
+            }
+            this.filter=this.sql.join(" OR ");
+            console.log(this.filter);
+        }
+    }
+    getFormatted(){
+        return this.v;
     }
 }
 class propertyID extends queryField{
@@ -292,11 +352,11 @@ class propertyQuery extends sqlQuery{
         this.ratemax=new ratemax(fields.ratemax); 
         this.lotmin=new lotmin(fields.lotmin);
         this.lotmax=new lotmax(fields.lotmax);
-        this.furnished=new furnished(["None","Semi","Full"][fields.furnished%3]); 
+        this.furnished=new furnished(fields.furnished); 
         this.curfew=new curfew(fields.curfew);
-        this.type=new type(["Condominium", "Dormitory", "Apartment", "Boarding House"][fields.type%4]);
+        this.type=new type(fields.type);
         this.occupancy=new occupancy([]);
-        this.stay=new stay([[0,7,13][fields.stay], [6,12,24][fields.stay]]);
+        this.stay=new stay(fields.stay);
         this.a=new amenities(fields.a);
 
         this.pid=new propertyID(fields.pid);   // property ID
@@ -361,11 +421,12 @@ class insertQuery extends sqlQuery{
         this.pid = new queryField("property_id",fields.pid);   // property ID
         this.pname = new queryField("property_name",fields.pname);
         this.add = new queryField("street_address",fields.add);
-        this.brgy =new queryField("municip_brgy",fields.brgy);
-        this.city =new queryField("city",fields.city);
+        this.brgy =new queryField("brgy",fields.brgy);
+        this.city =new queryField("city_municip",fields.city);
         this.area = new queryField("lot_area",fields.city);
         this.type = new queryField("lot_type",fields.type);
-        this.minstay = new queryField("min_stay",fields.minstay);
+        this.minstay = new queryField("min_month_stay",fields.minstay);
+        this.occupancy = new queryField("occupancy",fields.curfew);
         this.curfew = new queryField("curfew",fields.curfew);
         this.other = new queryField("other_details",fields.other);
         this.img = new queryField("img_url",fields.img);
@@ -387,7 +448,7 @@ class deleteQuery extends sqlQuery{
         super("DELETE FROM properties ", fields);
 
         this.pid =  new queryField("property_id",fields.pid);   // property ID
-        this.lid =  new queryField("landlord_id",fields.lid);   // property ID
+        this.lid =  new queryField("landlord_id",fields.lid);   // landlord ID
     }
     formatFilters(key){
         if (key=="pid" || key=="lid")
