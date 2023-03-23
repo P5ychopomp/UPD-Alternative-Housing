@@ -28,11 +28,10 @@ app.use(
   );
 
 // User authentication routes
-var authRouter = require('./routes/auth').router;
+var authRouter = require('./routes/auth');
 app.use('/', authRouter);
 
 /*** DASHBOARD ***/
-
 app.get("/dashboard", ensureLoggedIn, (req, res) => {
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate');
     const user = req.user;

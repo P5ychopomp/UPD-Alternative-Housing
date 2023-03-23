@@ -74,39 +74,48 @@ initializePassport(passport);
 var router = express.Router();
 
 router.use(passport.initialize());
-// Store our variables to be persisted across the whole session. Works with app.use(Session) above
+// Store our variables to be persisted across the whole session.
 router.use(passport.session());
 
 /**** USER REGISTRATION ****/
 router.get("/registration", (req, res) => {
-	// serve results page;
-	// TODO: use react
+  //! Unsure how to handle with React
 	res.sendFile("temp_registration.html", { root: __dirname });
 });
 
 router.post("/register", async (req, res) => {
-	let { fname, lname, email, password, passwordconfirm, fb, phone } = req.body;
+  let { first_name, last_name, email, password, passwordconfirm } = req.body;
 
 	let errors = [];
-
+  
 	console.log({
-		//name,
+    first_name, 
+    last_name,
 		email,
 		password,
 		passwordconfirm,
 	});
 
-	if (!email || !password || !passwordconfirm) {
-		errors.push({ message: "Please enter all fields" });
+  // Second layer of form validation; may be ommited
+  // Redirect the POST request to registration page when form is invalid
+  // TODO: Implement better handling of invalid form
+	if (!first_name || !last_name || !email || !password || !passwordconfirm) {
+    errors.push({ message: "Please enter all fields" });
+    res.redirect("/registration");
 	}
-
-	if (password.length < 6) {
-		errors.push({ message: "Password must be a least 6 characters long" });
-	}
-
+  
 	if (password !== passwordconfirm) {
-		errors.push({ message: "Passwords do not match" });
+    errors.push({ message: "Passwords do not match" });
+    res.redirect("/registration");
 	}
+  
+  // Password must be atleast 6 characters with one digit and special character
+  let strongPassword = new RegExp('(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+  
+  if (!strongPassword.test(password)) {
+    // Error 201: Weak Password
+    res.send({message: 201});
+  }
 
 	if (errors.length > 0) {
 		console.log(errors);
@@ -123,24 +132,22 @@ router.post("/register", async (req, res) => {
 				console.log(results);
 
 				if (results.length > 0) {
-					// TODO: Use React
-					return res.json({message: "Email already registered"});
+          // Error 202 : Account already used
+					res.send({message: 202});
 				} else {
-					console.log("inserting to database...");
-					console.log({email, hashedPassword });
+					console.log("Inserting to database...");
+					console.log({ first_name, last_name, email, hashedPassword });
 					pool.query(
-						`INSERT INTO accounts (last_name, first_name, email, password, facebook, phone) VALUES (?,?,?,?,?,?)`,
-						// RETURNING id, password`,      <---Postgresql Keyword, not sure what its use is.
-						[lname, fname, email, hashedPassword, fb, phone],
+						`INSERT INTO accounts (first_name, last_name, email, password, created) VALUES (?,?,?,?, NOW())`,
+						// RETURNING id, password`,      <---Postgresql Keyword
+						[first_name, last_name, email, hashedPassword],
 						(err, results) => {
 							if (err) {
 								throw err;
 							}
-							console.log(
-								"success_msg",
-								"You are now registered. Please log in"
-							);
-							res.redirect("/login");
+							console.log("You are now registered. Please log in");
+              // Success 200: Email Registered
+              res.send({message: 200});
 						}
 					);
 				}
@@ -151,16 +158,22 @@ router.post("/register", async (req, res) => {
 
 /**** USER LOGIN ****/
 router.get("/login", checkAuthenticated, (req,res)=>{ // results page
-  res.sendFile('temp_login.html',{root: __dirname})
+  if (req.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
 })
 
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
+router.post("/login", function(req, res, next) {
+  passport.authenticate("local", function(err, user) {
+    if (err) { return next(err) }
+    // Error 101: Invalid Credentials
+    if (!user) { res.send({message: 101}) }
+    // Success 100: User Logged In
+    res.send({message: 100});
   })
-);
+});
 
 /***** USER LOGOUT*****/
 router.post('/logout', function(req, res, next) {
@@ -186,4 +199,4 @@ function checkNotAuthenticated(req, res, next) {
 	res.redirect("/login");
 }
 
-module.exports = {router, checkNotAuthenticated};
+module.exports = router;
