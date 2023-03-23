@@ -46,6 +46,9 @@ app.get("/dashboard", ensureLoggedIn, (req, res) => {
         <form action="/logout" method="post">
         <button class="logout" type="submit">Logout</button>
         </form>
+        <form action="/api/delete?pid=250" method="post">
+        <button class="logout" type="submit">Delete</button>
+        </form>
     `)
 });
 
@@ -90,7 +93,7 @@ app.get("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
     })
 })
 
-app.get("/api/delete", deleteProperty, queryDB, (req,res)=>{ // should be POST
+app.post("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
@@ -260,7 +263,7 @@ class sqlQuery{
 
 class propertyQuery extends sqlQuery{
     constructor(fields){
-        super("SELECT * FROM properties WHERE ", fields);
+        super("SELECT * FROM properties ", fields);
 
         this.q = new keyword(fields.q);
         this.ratemin = new ratemin(fields.ratemin);
@@ -280,7 +283,8 @@ class propertyQuery extends sqlQuery{
 
     build(){
         super.build();
-        this.sql+=this.queryFilters.join(" AND ");
+        if (this.queryFilters.length)
+            this.sql+="WHERE " + this.queryFilters.join(" AND ");
         this.sql+=" LIMIT 20"; // add limit to db query result
     }
 }
