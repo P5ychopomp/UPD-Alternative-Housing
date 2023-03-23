@@ -93,7 +93,28 @@ app.get("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
     })
 })
 
-app.post("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
+app.get("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/accounts", ensureLoggedIn, queryAccount, queryDB, (req,res)=>{ 
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/updateAcc", ensureLoggedIn, updateAccount, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
@@ -245,6 +266,7 @@ class sqlQuery{
     build(){
         for (let key of Object.keys(this.req)){    // append each filter parameter in request to sql statement
             // guard clause against special characters
+            console.log(key);
             if (!this.noSpecialCharacters(String(this[key].getValue()))){
                 return 400;
             }
@@ -279,13 +301,21 @@ class propertyQuery extends sqlQuery{
 
         this.pid=new propertyID(fields.pid);   // property ID
         this.lid= new landlordID(fields.lid);  // landlord ID
-    }
 
+        this.page=new queryField("wala lang", fields.page); // pagination
+    }
+    formatFilters(key){
+        if (key=="page")
+            return;
+        super.formatFilters(key);
+    }
     build(){
         super.build();
         if (this.queryFilters.length)
             this.sql+="WHERE " + this.queryFilters.join(" AND ");
-        this.sql+=" LIMIT 20"; // add limit to db query result
+        this.sql+=" LIMIT 20";  // add limit to db query result
+        if (this.page.getValue()!=null)
+            this.sql+=" OFFSET " + 20*(this.page.getValue()-1); // add limit to db query result
     }
 }
 
@@ -306,18 +336,19 @@ class updateQuery extends sqlQuery{
         this.other = new updateField("other_details",fields.other);
         this.img = new updateField("img_url",fields.img);
         this.date = new updateField("date_posted",fields.date);
-        this.lid = new updateField("landlord_id",fields.lid);
+        this.lid = new queryField("landlord_id",fields.lid);
     }
     formatFilters(key){
-        if (key=="pid")
+        if (key=="pid" || key=="lid")
             return;
         super.formatFilters(key);
     }
     build(){
         super.build();
         this.sql+=this.queryFilters.join(", ");
-        this.sql += " WHERE property_id = ?"
+        this.sql += " WHERE property_id = ? AND landlord_id = ?"
         this.queryValues.push(this.pid.getValue());
+        this.queryValues.push(this.lid.getValue());
     }
 }
 
@@ -356,17 +387,75 @@ class deleteQuery extends sqlQuery{
         super("DELETE FROM properties ", fields);
 
         this.pid =  new queryField("property_id",fields.pid);   // property ID
+        this.lid =  new queryField("landlord_id",fields.lid);   // property ID
     }
     formatFilters(key){
-        if (key=="pid")
+        if (key=="pid" || key=="lid")
             return;
         super.formatFilters(key);
     }
     build(){
         super.build();
         this.sql+=this.queryFilters.join(", ");
-        this.sql += " WHERE property_id = ?"
+        this.sql += " WHERE property_id = ? AND landlord_id = ?"
         this.queryValues.push(this.pid.getValue());
+        this.queryValues.push(this.lid.getValue());
+    }
+}
+
+class accountQuery extends sqlQuery{
+    constructor(fields){
+        super("SELECT * FROM accounts ", fields);
+
+        this.lid= new queryField("id = ?",fields.lid);  // landlord ID
+    }
+    build(){
+        super.build();
+        if (this.queryFilters.length)
+            this.sql+="WHERE " + this.queryFilters.join(" AND ");
+    }
+}
+
+class updateAccountQuery extends sqlQuery{
+    constructor(fields){
+        super("UPDATE accounts SET ", fields);
+
+        this.lname = new updateField("last_name",fields.lname);
+        this.fname = new updateField("first_name",fields.fname);
+        this.img = new updateField("profile_picture",fields.img);
+        this.fb = new updateField("facebook", fields.fb);
+        this.phone = new updateField("phone", fields.phone);
+        this.lid = new updateField("id",fields.lid);
+    }
+    formatFilters(key){
+        if (key=="lid")
+            return;
+        super.formatFilters(key);
+    }
+    build(){
+        super.build();
+        this.sql+=this.queryFilters.join(", ");
+        this.sql += " WHERE id = ?"
+        this.queryValues.push(this.lid.getValue());
+    }
+}
+
+class deleteAccountQuery extends sqlQuery{
+    constructor(fields){
+        super("DELETE FROM accounts ", fields);
+
+        this.lid =  new queryField("landlord_id",fields.lid);   // property ID
+    }
+    formatFilters(key){
+        if (key=="lid")
+            return;
+        super.formatFilters(key);
+    }
+    build(){
+        super.build();
+        this.sql+=this.queryFilters.join(", ");
+        this.sql += " WHERE id = ?"
+        this.queryValues.push(this.lid.getValue());
     }
 }
 
@@ -380,17 +469,38 @@ function queryResults(req, res, next){
 }
 
 function updateProperty(req, res, next){
+    req.query.lid=req.user.id;
     req.sql = new updateQuery(req.query);
     next();
 }
 
 function insertProperty(req, res, next){
+    req.query.lid=req.user.id;
     req.sql = new insertQuery(req.query);
     next();
 }
 
 function deleteProperty(req, res, next){
+    req.query.lid=req.user.id;
     req.sql = new deleteQuery(req.query);
+    next();
+}
+
+function queryAccount(req, res, next){
+    req.query.lid=req.user.id;
+    req.sql = new accountQuery(req.query);
+    next();
+}
+
+function updateAccount(req, res, next){
+    req.query.lid=req.user.id;
+    req.sql = new updateAccountQuery(req.query);
+    next();
+}
+
+function deleteAccount(req, res, next){
+    req.query.lid=req.user.id;
+    req.sql = new deleteAccountQuery(req.query);
     next();
 }
 

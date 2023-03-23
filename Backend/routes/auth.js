@@ -85,18 +85,18 @@ router.get("/registration", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-	let { name, email, password, passwordconfirm } = req.body;
+	let { fname, lname, email, password, passwordconfirm, fb, phone } = req.body;
 
 	let errors = [];
 
 	console.log({
-		name,
+		//name,
 		email,
 		password,
 		passwordconfirm,
 	});
 
-	if (!name || !email || !password || !passwordconfirm) {
+	if (!email || !password || !passwordconfirm) {
 		errors.push({ message: "Please enter all fields" });
 	}
 
@@ -127,11 +127,11 @@ router.post("/register", async (req, res) => {
 					return res.json({message: "Email already registered"});
 				} else {
 					console.log("inserting to database...");
-					console.log({ name, email, hashedPassword });
+					console.log({email, hashedPassword });
 					pool.query(
-						`INSERT INTO accounts (name, email, password) VALUES (?,?,?)`,
+						`INSERT INTO accounts (last_name, first_name, email, password, facebook, phone) VALUES (?,?,?,?,?,?)`,
 						// RETURNING id, password`,      <---Postgresql Keyword, not sure what its use is.
-						[name, email, hashedPassword],
+						[lname, fname, email, hashedPassword, fb, phone],
 						(err, results) => {
 							if (err) {
 								throw err;
