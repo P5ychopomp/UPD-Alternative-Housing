@@ -70,7 +70,7 @@ CREATE TABLE `properties` (
   `occupancy` tinyint(1) DEFAULT NULL,
   `furnishing` varchar(10) DEFAULT NULL,
   `curfew` tinyint DEFAULT NULL,
-  `inclusion` text,
+  `inclusion` set('Electricity','Water','Wifi','Kitchen','Parking') DEFAULT NULL,
   `other_details` varchar(45) DEFAULT NULL,
   `img_url` varchar(255) DEFAULT NULL,
   `date_posted` date DEFAULT NULL,
@@ -125,4 +125,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-24  0:08:23
+-- Dump completed on 2023-03-24  0:45:10
