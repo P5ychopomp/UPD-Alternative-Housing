@@ -16,11 +16,38 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
 import Theme from "../../components/Theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import Axios from "axios";
 
 const LandlordLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loginStatus, setLoginStatus] = useState(0);
+  Axios.defaults.withCredentials = true;
+
+  const login = () => {
+    console.log(email, password);
+    Axios.post("http://localhost:3001/login", {
+      email: email,
+      password: password,
+    }).then((response) => {
+      if (response.data.message === 100) {
+        setLoginStatus(response.data.message);
+      } else {
+        console.log(response.data.message);
+      }
+    });
+  };
+
+  useEffect(() => {
+    Axios.get("http://localhost:3001/login").then((response) => {
+      if (response.data.loggedIn === true) {
+        setLoginStatus(response.data.user[0].email);
+      }
+    });
+  }, []);
 
   return (
     <ChakraProvider theme={Theme}>
@@ -68,13 +95,19 @@ const LandlordLogin = () => {
               <GridItem colSpan={4} rowSpan={1}></GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-                <Input placeholder="Email" size="lg" />
+                <Input placeholder="Email" size="lg" 
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                          }}/>
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <InputGroup size="lg">
                   <Input
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
                   />
                   <InputRightElement p="1">
                     <Button
@@ -90,7 +123,8 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-                <Button
+              
+              <Button
                   loadingText="Submitting"
                   size="lg"
                   bg={"upd.400"}
@@ -98,9 +132,12 @@ const LandlordLogin = () => {
                   _hover={{
                     bg: "upd.700",
                   }}
+                  onClick={login}
                 >
                   Log in
                 </Button>
+                  
+                
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <Text>

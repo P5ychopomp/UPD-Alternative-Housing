@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import { ChakraProvider, Container } from "@chakra-ui/react";
+import { ChakraProvider, Container, Spinner, Text } from "@chakra-ui/react";
 import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import Listings from "../components/Listings";
 import Search from "../components/Search";
@@ -17,12 +17,16 @@ function Home() {
   const [page, setPage] = useState(0);
   const [searchFilters, setSearchFilters] = useState("");
   const [sfVisible, setSfVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getListings = async () => {
-      const res = await fetch(`${fetchBaseUrl}?${query}${searchFilters}`);
+      const res = await fetch(`${fetchBaseUrl}?page=${page+1}${query}${searchFilters}`);
       const house = await res.json();
-      const total = res.headers.get("x-total-count");
+      setIsLoading(false);
+      //const total = res.headers.get("x-total-count");
+      const total = house.data[0].count;
+      console.log(house.data[0])
       setpageCount(Math.ceil(total / 10));
       setListings(house.data);
     };
@@ -85,7 +89,15 @@ function Home() {
             forcePage={page}
           />
         </Container>
-        <Listings properties={properties} />
+
+        {!isLoading ? (
+          <Listings properties={properties} />
+        ) : (
+          <Container mt="20" centerContent>
+            <Spinner color="gray.600" size="xl" />
+            <Text color="gray.600" fontWeight="bold" mt='5'>Fetching Listings...</Text>
+          </Container>
+        )}
         <Container mt="5em" centerContent>
           <ReactPaginate
             previousLabel={<ArrowBackIcon style={{ fontSize: 18 }} />}
