@@ -169,7 +169,7 @@ router.post("/login", function(req, res, next) {
   passport.authenticate("local", function(err, user) {
     if (err) { return next(err) }
     // Error 101: Invalid Credentials
-    if (!user) { res.send({message: 101}) }
+    if (!req.user) { res.send({message: 101}) }
     // Success 100: User Logged In
     res.send({message: 100});
   })
