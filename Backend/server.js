@@ -79,21 +79,21 @@ app.get("/api/listings/:pid", queryResults, queryDB, (req,res)=>{
     })
 })
 
-app.get("/api/update", updateProperty, queryDB, (req,res)=>{ // should be POST
+app.post("/api/update", updateProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
-app.get("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
+app.post("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
-app.get("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
+app.post("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
@@ -107,26 +107,20 @@ app.get("/api/accounts", ensureLoggedIn, queryAccount, queryDB, (req,res)=>{
     })
 })
 
-app.get("/api/updateAcc", ensureLoggedIn, updateAccount, queryDB, (req,res)=>{ // should be POST
+app.post("/api/updateAcc", ensureLoggedIn, updateAccount, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
-app.get("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ // should be POST
+app.post("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
-app.get("/api/test", (req,res)=>{ // should be POST
-    //console.log(req.query);
-    for (let key of req.query.furnished){
-        console.log(req.query.furnished.length);
-    }
-    res.json(req.query);
-})
+
 
 class queryField{
     constructor(filter, value){
@@ -530,20 +524,20 @@ function queryResults(req, res, next){
 }
 
 function updateProperty(req, res, next){
-    req.query.lid=req.user.id;
-    req.sql = new updateQuery(req.query);
+    req.body.lid=req.user.id;
+    req.sql = new updateQuery(req.body);
     next();
 }
 
 function insertProperty(req, res, next){
-    req.query.lid=req.user.id;
-    req.sql = new insertQuery(req.query);
+    req.body.lid=req.user.id;
+    req.sql = new insertQuery(req.body);
     next();
 }
 
 function deleteProperty(req, res, next){
-    req.query.lid=req.user.id;
-    req.sql = new deleteQuery(req.query);
+    req.body.lid=req.user.id;
+    req.sql = new deleteQuery(req.body);
     next();
 }
 
@@ -554,14 +548,14 @@ function queryAccount(req, res, next){
 }
 
 function updateAccount(req, res, next){
-    req.query.lid=req.user.id;
-    req.sql = new updateAccountQuery(req.query);
+    req.body.lid=req.user.id;
+    req.sql = new updateAccountQuery(req.body);
     next();
 }
 
 function deleteAccount(req, res, next){
-    req.query.lid=req.user.id;
-    req.sql = new deleteAccountQuery(req.query);
+    req.body.lid=req.user.id;
+    req.sql = new deleteAccountQuery(req.body);
     next();
 }
 
