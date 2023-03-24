@@ -1,10 +1,24 @@
 var express = require("express");
+const app = express();
+
 var passport = require("passport");
 const session = require("express-session");
 var LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
+var cors = require('cors');
+app.use(cors({credentials: true, origin: 'http://localhost:3000/'}));
+
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Credentials", true);
+//     next();
+//   });
+// var corsOptions = {
+//   origin: 'http://localhost:3000/',
+//   withCredentials: false,
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
 function initializePassport(passport) {
     console.log("Initialized");
@@ -157,23 +171,40 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-router.get("/login", checkAuthenticated, (req,res)=>{ // results page
+router.get("/login", checkAuthenticated, (req, res) => { // results page
   if (req.user) {
     res.send({ loggedIn: true, user: req.session.user });
   } else {
+    console.log("GET /login")
     res.send({ loggedIn: false });
   }
 })
 
+// Login page for backend testing
+router.get("/login_page", checkAuthenticated, (req,res)=>{ // results page
+  res.sendFile('temp_login.html',{root: __dirname})})
+
 router.post("/login", function(req, res, next) {
-  passport.authenticate("local", function(err, user) {
-    if (err) { return next(err) }
-    // Error 101: Invalid Credentials
-    if (!req.user) { res.send({message: 101}) }
-    // Success 100: User Logged In
-    res.send({message: 100});
-  })
-});
+    passport.authenticate('local', function(err, user, info) {
+      console.log("Authenticating...")
+      if (err) { return next(err) }
+      console.log(user)
+      // Error 101: Invalid Credentials
+      if (!user) {return res.send({message: 101}) }
+
+      // Success 100: User Logged In
+      res.send({message: 100});
+    })(req, res, next);
+  });
+  
+// router.post(
+//   "/login",
+//   passport.authenticate("local", {
+//     successMessage: true,
+//     failureMessage,
+//   })
+// );
+
 
 /***** USER LOGOUT*****/
 router.post('/logout', function(req, res, next) {

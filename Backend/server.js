@@ -9,7 +9,7 @@ var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 
 var cors = require('cors');
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.urlencoded({ extended: false }));
 
 // Session Storage
@@ -33,22 +33,7 @@ app.use('/', authRouter);
 
 /*** DASHBOARD ***/
 app.get("/dashboard", ensureLoggedIn, (req, res) => {
-    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate');
-    const user = req.user;
-    res.send(`
-        <meta http-equiv="Cache-Control" content="no-cache, no-store">
-        <h1>DASHBOARD</h1>
-        <ul>
-        <li> Name: ${user.name} </li>
-        <li> Email:${user.email} </li>
-        </ul>
-        <form action="/logout" method="post">
-        <button class="logout" type="submit">Logout</button>
-        </form>
-        <form action="/api/delete?pid=250" method="post">
-        <button class="logout" type="submit">Delete</button>
-        </form>
-    `)
+    res.send({message: 100});
 });
 
 
