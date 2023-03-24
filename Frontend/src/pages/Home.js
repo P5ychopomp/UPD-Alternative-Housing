@@ -21,11 +21,11 @@ function Home() {
 
   useEffect(() => {
     const getListings = async () => {
-      const res = await fetch(`${fetchBaseUrl}?page=${page+1}${query}${searchFilters}`);
+      const res = await fetch(`${fetchBaseUrl}?page=${page+1}&${query}${searchFilters}`);
       const house = await res.json();
       setIsLoading(false);
       //const total = res.headers.get("x-total-count");
-      const total = house.data[0].count;
+      const total = house.data.length//[0].count;
       console.log(house.data[0])
       setpageCount(Math.ceil(total / 10));
       setListings(house.data);

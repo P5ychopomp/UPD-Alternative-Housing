@@ -250,7 +250,6 @@ class amenities extends queryField{
                 this.v.push(["Electricity","Water","WiFi","Kitchen","Parking"][key]);
             }
             this.filter=this.sql.join(" OR ");
-            console.log(this.filter);
         }
     }
     getFormatted(){
@@ -351,7 +350,7 @@ class propertyQuery extends sqlQuery{
         this.type=new type(fields.type);
         this.occupancy=new occupancy([]);
         this.stay=new stay(fields.stay);
-        this.a=new amenities(fields.a);
+        this.inclusions=new amenities(fields.inclusions);
 
         this.pid=new propertyID(fields.pid);   // property ID
         this.lid= new landlordID(fields.lid);  // landlord ID
