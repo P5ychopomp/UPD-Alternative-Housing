@@ -20,6 +20,7 @@ import { Icon } from "@iconify/react";
 import Axios from "axios";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import { fetchAuth } from "../../utils/FetchAuth.js";
 
 export const LandlordCreateProperty = () => {
   return <SidebarWithHeader children={<Content />} />;
@@ -30,7 +31,7 @@ const Content = () => {
   const [loginStatus, setLoginStatus] = useState(false);
 
   const logout = async () => {
-    await Axios.post("http://localhost:3001/logout","",{
+    await Axios.post(`${fetchAuth}/logout`,"",{
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }
@@ -41,7 +42,7 @@ const Content = () => {
   };
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/login").then((response) => {
+    Axios.get(`${fetchAuth}/login`).then((response) => {
       setLoginStatus(response.data.loggedIn);
       if (loginStatus !== true) {
         navigate("/")

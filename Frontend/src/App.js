@@ -22,7 +22,7 @@ import Landing from "./pages/Landing";
 const App = () => {
   return (
     <ChakraProvider theme={Theme}>
-      <Container maxW='100%' m='0' p='0' minH='150vh'>
+      <Container maxW='80%' minH='150vh'>
       <Routes>
         <Route element={<Navbar />}>
           <Route index element={<Landing />} />

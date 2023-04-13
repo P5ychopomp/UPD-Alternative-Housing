@@ -37,7 +37,7 @@ export default function Footer() {
               <Box>
                 <Image
                   className="navbar-logo"
-                  src="USC-logo2.png"
+                  src="USC-Logo2.png"
                   alt="USC Logo"
                   h="4em"
                   ml="0"
