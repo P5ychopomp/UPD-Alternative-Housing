@@ -35,7 +35,7 @@ const PropertyTemp = ({ property }) => {
     <ChakraProvider theme={Theme}>
         <Container minW='80%' mt='20' fontWeight='bold' as='h2' mb='20'>
             <Box mb='5' color='#792E3F' >
-            <Link to="/">{'<<'}Back</Link>
+            <Link to="/Home">{'<<'}Back</Link>
             </Box>
 
             <Box
