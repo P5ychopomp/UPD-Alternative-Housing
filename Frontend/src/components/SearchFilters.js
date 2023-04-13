@@ -62,8 +62,10 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
   const handleFilterClick = () => {
     let filters1 = `&ratemin=${rate[0]}&ratemax=${rate[1]}&lotmin=${lotArea[0]}&lotmax=${lotArea[1]}`;
     for (const e of furnishType) filters1 += `&furnished=${e}`;
+    if (curfew.length !== 2)
     for (const e of curfew) filters1 += `&curfew=${e}`;
     for (const e of lotType) filters1 += `&type=${e}`;
+    if (occupy.length !== 2)
     for (const e of occupy) filters1 += `&occupancy=${e}`;
     for (const e of minStay) filters1 += `&stay=${e}`;
     for (const e of inclusion) filters1 += `&inclusions=${e}`;

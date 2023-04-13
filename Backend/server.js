@@ -219,6 +219,9 @@ class occupancy extends queryField{
     constructor(value){
         super(value==1 ? "occupancy > 1" : "occupancy <= 1", value);
     }
+    getFormatted(){
+        return [];
+    }
 }
 class stay extends queryField{
     constructor(value){
@@ -319,7 +322,6 @@ class sqlQuery{
     build(){
         for (let key of Object.keys(this.req)){    // append each filter parameter in request to sql statement
             // guard clause against special characters
-            console.log(key);
             if (!this.noSpecialCharacters(String(this[key].getValue()))){
                 return 400;
             }
@@ -348,7 +350,7 @@ class propertyQuery extends sqlQuery{
         this.furnished=new furnished(fields.furnished); 
         this.curfew=new curfew(fields.curfew);
         this.type=new type(fields.type);
-        this.occupancy=new occupancy([]);
+        this.occupancy=new occupancy(fields.occupancy);
         this.stay=new stay(fields.stay);
         this.inclusions=new amenities(fields.inclusions);
 
