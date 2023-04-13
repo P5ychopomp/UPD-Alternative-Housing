@@ -5,9 +5,11 @@ import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import Listings from "../components/Listings";
 import Search from "../components/Search";
 import SearchFilters from "../components/SearchFilters";
+import NoData from "../components/NoData"
 import Theme from "../components/Theme";
 import { fetchBaseUrl } from "../utils/FetchBaseUrl";
 import "./styles/Home.css";
+import axios from "axios";
 
 function Home() {
   const [query, setQuery] = useState("");
@@ -18,20 +20,24 @@ function Home() {
   const [searchFilters, setSearchFilters] = useState("");
   const [sfVisible, setSfVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalpage, setTotalpage] = useState(20);
+  const [none, setNone] = useState(true);
 
   useEffect(() => {
-    const getListings = async () => {
-      const res = await fetch(`${fetchBaseUrl}?page=${page+1}&${query}${searchFilters}`);
-      const house = await res.json();
-      setIsLoading(false);
+    const getListings = () => {
+      setIsLoading(true);
+      axios.get(`${fetchBaseUrl}?page=${page+1}&${query}${searchFilters}`).then((res) => {
+        setIsLoading(false);
+        const house = res.data;
+        if (house.data.length === 0) setNone(false);
+        if (page !== 0) setTotalpage(house.data.length);
+        setpageCount(Math.ceil(totalpage / 10));
+        setListings(house.data);
+      });
       //const total = res.headers.get("x-total-count");
-      const total = house.data.length//[0].count;
-      console.log(house.data[0])
-      setpageCount(Math.ceil(total / 10));
-      setListings(house.data);
     };
     getListings();
-  }, [query, page, searchFilters]);
+  }, [query, page, searchFilters, totalpage, setTotalpage]);
 
   const handlePageClick = async (data) => {
     setPage(data.selected);
@@ -43,7 +49,7 @@ function Home() {
 
   return (
     <div>
-      <Container minW="100%">
+      <Container maxW="100%">
         <ChakraProvider theme={Theme}>
           <Search
             keywords={keywords}

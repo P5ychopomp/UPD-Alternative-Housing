@@ -16,7 +16,7 @@ function Navbar() {
           <Link to="/">
             <Image
               className="navbar-logo"
-              src="USC-logo2.png"
+              src="USC-Logo2.png"
               alt="USC Logo"
               height="5em"
             />
