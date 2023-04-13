@@ -123,7 +123,7 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-              
+              <Link as={ReactLink} to='/CreateProperty'>
               <Button
                   loadingText="Submitting"
                   size="lg"
@@ -132,10 +132,10 @@ const LandlordLogin = () => {
                   _hover={{
                     bg: "upd.700",
                   }}
-                  onClick={login}
                 >
                   Log in
                 </Button>
+                </Link>
                   
                 
               </GridItem>
