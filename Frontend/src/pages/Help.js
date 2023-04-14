@@ -1,6 +1,6 @@
 import { Box, ChakraProvider, Container } from '@chakra-ui/react'
 
-export const Help = () => {
+const Help = () => {
   return (
     <ChakraProvider>
       <Container mt='20' alignItems='center' centerContent>
@@ -11,3 +11,5 @@ export const Help = () => {
     </ChakraProvider>
   )
 }
+
+export default Help;
