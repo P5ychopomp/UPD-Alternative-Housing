@@ -1,8 +1,11 @@
-import { ChakraProvider, Input, Container, Grid, GridItem } from '@chakra-ui/react';
+import { ChakraProvider, Input, Container, Grid, GridItem, FormControl} from '@chakra-ui/react';
 import Theme from './Theme';
 import { IoSearchCircle, IoFilter } from 'react-icons/io5';
+import { useState } from 'react';
 
 const Search = ({ keywords, setKeywords, sfVisible, setSfVisible, setQuery }) => {
+
+const [isError, setisError] = useState(false);
 
   return (
     <div>
@@ -31,20 +34,31 @@ const Search = ({ keywords, setKeywords, sfVisible, setSfVisible, setQuery }) =>
               />
             </GridItem>
             <GridItem>
-              <Input
-                userSelect='none'
-                variant='unstyled'
-                placeholder='Enter keyword' p='2'
-                _placeholder={{ opacity: 1, color: 'gray.400' }}
-                value={keywords}
-                onChange={(e) => setKeywords(e.target.value)}
-                onKeyPress={(v) => {
-                  if (v.key === "Enter") {
-                    setQuery(`q=${keywords}`);
+              <FormControl >
+                <Input
+                  userSelect='none'
+                  variant='unstyled'
+                  isInvalid={isError}
+
+                  placeholder='Enter keyword' p='2'
+                  _placeholder={{ opacity: 1, color: 'gray.400' }}
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
+                  onKeyPress={(v) => {
+                    
+                    if (v.key === "Enter") {
+                      if (keywords.match(/[`'/*%;+|<>=!.-]/)) {
+                        setisError(true);
+                      } else {
+                        setisError(false);
+                      setQuery(`q=${keywords}`);
+                      }
+                    }
                   }
-                }
-                }
-              />
+                  }
+                />
+              </FormControl>
+              
             </GridItem>
             <GridItem
               justifyContent='center'
@@ -55,11 +69,19 @@ const Search = ({ keywords, setKeywords, sfVisible, setSfVisible, setQuery }) =>
                 type='button'
                 color='#58152e'
                 size={25}
-                onClick={() => setQuery(`q=${keywords}`)} />
+                onClick={() => {
+                  if (keywords.match(/[`'/*%;+|<>=!.-]/)) {
+                    setisError(true);
+                  } else {
+                    setisError(false);
+                  setQuery(`q=${keywords}`);
+                  }
+                }} />
             </GridItem>
           </Grid>
-
+          {!isError ? (!isError) : (<Container color='upd.500' mt='1' ml='8' maxW='100%' fontWeight='bold' fontSize='12'>Keyword can't contain the following characters: ` ' / * % ; + | &lt; &gt; = ! - .  </Container>)}
         </Container>
+        
       </ChakraProvider>
     </div>
 
