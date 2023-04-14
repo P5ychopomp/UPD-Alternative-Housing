@@ -105,6 +105,28 @@ app.get("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ /
     })
 })
 
+app.get("/api/accounts", ensureLoggedIn, queryAccount, queryDB, (req,res)=>{ 
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.post("/api/updateAcc", ensureLoggedIn, updateAccount, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.post("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+
 class queryField{
     constructor(filter, value){
         this.filter=filter;
@@ -184,7 +206,19 @@ class stay extends queryField{
 }
 class amenities extends queryField{
     constructor(value){
-        super("", value);
+        super("FIND_IN_SET(?, inclusion)", value);
+        this.sql=[];
+        this.v=[];
+        if (this.value != null){
+            for (let key of this.value){
+                this.sql.push(this.filter);
+                this.v.push(["Electricity","Water","WiFi","Kitchen","Parking"][key]);
+            }
+            this.filter=this.sql.join(" OR ");
+        }
+    }
+    getFormatted(){
+        return this.v;
     }
 }
 class propertyID extends queryField{

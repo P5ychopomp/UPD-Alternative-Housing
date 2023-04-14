@@ -1,5 +1,5 @@
 import { Box, Image, ChakraProvider, Text, Container, Grid, GridItem } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { Icon } from '@iconify/react'
 import Theme from './Theme'
 
@@ -35,7 +35,7 @@ const PropertyTemp = ({ property }) => {
     <ChakraProvider theme={Theme}>
         <Container minW='80%' mt='20' fontWeight='bold' as='h2' mb='20'>
             <Box mb='5' color='#792E3F' >
-            <Link to="/">{'<<'}Back</Link>
+            <Link href="/Listings">{'<<'}Back</Link>
             </Box>
 
             <Box
