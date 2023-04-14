@@ -21,6 +21,7 @@ import {
   MenuList,
   Heading,
   Image,
+  ChakraProvider
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -32,7 +33,7 @@ import {
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
-import { Image as NextImage } from 'next/image'
+import Theme from "../Theme";
 
 const LinkItems = [
   { name: "Home", icon: FiHome },
@@ -42,9 +43,11 @@ const LinkItems = [
   { name: "Settings", icon: FiSettings },
 ];
 
-export default function SidebarWithHeader({ children }) {
+export default function SidebarWithHeader({ children, ...pageProps }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
+    <ChakraProvider theme={Theme}>
     <Box minH="200vh" bgColor="gray.100">
       <SidebarContent
         onClose={() => onClose}
@@ -69,6 +72,7 @@ export default function SidebarWithHeader({ children }) {
         {children}
       </Box>
     </Box>
+    </ChakraProvider>
   );
 }
 
@@ -86,9 +90,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" mb='10'>
         <Image
-          as={NextImage}
           className="navbar-logo"
-          src="USC-Logo2.png"
+          src="/USC-Logo2.png"
           alt="USC Logo"
           height="3.5em"
           ml='0'

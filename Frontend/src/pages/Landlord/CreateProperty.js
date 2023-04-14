@@ -21,7 +21,7 @@ import Axios from "axios";
 import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
 
-export const CreateProperty = () => {
+const LandlordCreateProperty = () => {
   return <SidebarWithHeader children={<Content />} />;
 };
 
@@ -273,3 +273,5 @@ const Content = () => {
     </ChakraProvider>
   );
 };
+
+export default LandlordCreateProperty;

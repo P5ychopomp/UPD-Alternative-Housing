@@ -68,7 +68,7 @@ const Search = ({
                               <WarningIcon pl='0' pr='2' boxSize='1.5em'/>
                               <Stack spacing='1'>
                               <Box fontWeight='bold'>Invalid Keyword</Box>
-                              <Box fontSize='sm' >Keyword can't contain the following characters: ` ' / * % ; + | &lt; &gt; = ! - .</Box>
+                              <Box fontSize='sm' >Keyword can&apos;t contain the following characters: ` &apos; / * % ; + | &lt; &gt; = ! - .</Box>
                             </Stack>
                             </Container>
                             
