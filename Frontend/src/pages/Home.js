@@ -5,7 +5,7 @@ import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import Listings from "../components/Listings";
 import Search from "../components/Search";
 import SearchFilters from "../components/SearchFilters";
-import NoData from "../components/NoData"
+import NoData from "../components/NoData";
 import Theme from "../components/Theme";
 import { fetchBaseUrl } from "../utils/FetchBaseUrl";
 import "./styles/Home.css";
@@ -26,14 +26,20 @@ function Home() {
   useEffect(() => {
     const getListings = () => {
       setIsLoading(true);
-      axios.get(`${fetchBaseUrl}?page=${page+1}&${query}${searchFilters}`).then((res) => {
-        setIsLoading(false);
+      axios.get(`${fetchBaseUrl}?${query}${searchFilters}`).then((res) => {
         const house = res.data;
         if (house.data.length === 0) setNone(false);
-        if (page !== 0) setTotalpage(house.data.length);
-        setpageCount(Math.ceil(totalpage / 10));
-        setListings(house.data);
+        setTotalpage(house.data.length);
+        setpageCount(Math.ceil(totalpage / 20));
+        axios
+          .get(`${fetchBaseUrl}?page=${page + 1}&${query}${searchFilters}`)
+          .then((res) => {
+            setIsLoading(false);
+            const house = res.data;
+            setListings(house.data);
+          });
       });
+
       //const total = res.headers.get("x-total-count");
     };
     getListings();
@@ -101,7 +107,9 @@ function Home() {
         ) : (
           <Container mt="20" centerContent>
             <Spinner color="gray.600" size="xl" />
-            <Text color="gray.600" fontWeight="bold" mt='5'>Fetching Listings...</Text>
+            <Text color="gray.600" fontWeight="bold" mt="5">
+              Fetching Listings...
+            </Text>
           </Container>
         )}
         <Container mt="5em" centerContent>
