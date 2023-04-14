@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import Link from "next/link";
 import { Image } from "@chakra-ui/react";
-import "./styles/Navbar.css";
+import { Image as NextImage } from 'next/image'
+import "./styles/Navbar.module.css";
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -13,10 +14,11 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <Link to="/">
+          <Link href="/">
             <Image
+              as={NextImage}
               className="navbar-logo"
-              src="USC-Logo2.png"
+              src="/USC-Logo2.png"
               alt="USC Logo"
               height="5em"
             />
@@ -26,14 +28,14 @@ function Navbar() {
           </div>
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item">
-              <Link to="/" className="nav-links" onClick={closeMobileMenu}>
+              <Link href="/" className="nav-links" onClick={closeMobileMenu}>
                 Home
               </Link>
             </li>
 
             <li className="nav-item">
               <Link
-                to="/AboutUs"
+                href="/About"
                 className="nav-links"
                 onClick={closeMobileMenu}
               >
@@ -42,14 +44,13 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              <Link to="/Faqs" className="nav-links" onClick={closeMobileMenu}>
+              <Link href="/Faqs" className="nav-links" onClick={closeMobileMenu}>
                 FAQs
               </Link>
             </li>
           </ul>
         </div>
       </nav>
-      <Outlet />
     </>
   );
 }

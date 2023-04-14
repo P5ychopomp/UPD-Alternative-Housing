@@ -14,14 +14,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Link as ReactLink, useNavigate } from "react-router-dom";
+import { Image as NextImage } from 'next/image';
+import { Link as NextLink} from "next/link";
 import Theme from "../../components/Theme";
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
+import Layout from "@/components/Layout";
 
 const LandlordLogin = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -48,6 +49,7 @@ const LandlordLogin = () => {
 
   return (
     <ChakraProvider theme={Theme}>
+      <Layout>
       <Container mt="100" minW="100%" alignItems="center" centerContent>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"} color="upd.700">
@@ -81,10 +83,11 @@ const LandlordLogin = () => {
 
               <GridItem rowSpan={5} colSpan={4}>
                 <Image
+                  as={NextImage}
                   boxSize="300px"
                   objectFit="cover"
                   borderRadius="lg"
-                  src="landlord-image-1.png"
+                  src="/landlord.png"
                   alt="Landlord Icon"
                 />
               </GridItem>
@@ -120,7 +123,7 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-              <Link as={ReactLink} to='/CreateProperty'>
+              <Link as={NextLink} to='/CreateProperty'>
               <Button
                   loadingText="Submitting"
                   size="lg"
@@ -138,8 +141,8 @@ const LandlordLogin = () => {
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <Text>
-                  Don't have an account?{" "}
-                  <Link as={ReactLink} to="/LandlordRegister" color={"upd.400"}>
+                  Don&apos;t have an account?
+                  <Link as={NextLink} href="/Landlord/Register" color={"upd.400"}>
                     Sign up
                   </Link>
                 </Text>
@@ -150,6 +153,7 @@ const LandlordLogin = () => {
           </Box>
         </Stack>
       </Container>
+      </Layout>
     </ChakraProvider>
   );
 };

@@ -18,16 +18,14 @@ import {
 import Theme from "../../components/Theme.js";
 import { Icon } from "@iconify/react";
 import Axios from "axios";
-import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
 
-export const LandlordCreateProperty = () => {
+export const CreateProperty = () => {
   return <SidebarWithHeader children={<Content />} />;
 };
 
 const Content = () => {
-  const navigate = useNavigate();
   const [loginStatus, setLoginStatus] = useState(false);
 
   const logout = async () => {
@@ -37,16 +35,14 @@ const Content = () => {
       }
     }).then((res)=>{
       console.log(res);
-      if (res.data.message === 102) navigate("/")
+      
     });
   };
 
   useEffect(() => {
     Axios.get(`${fetchAuth}/login`).then((response) => {
       setLoginStatus(response.data.loggedIn);
-      if (loginStatus !== true) {
-        navigate("/")
-      }
+      
     });
   }, []);
   const [name, setName] = useState(true);

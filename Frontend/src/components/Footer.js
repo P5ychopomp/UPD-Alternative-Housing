@@ -9,7 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link as ReactLink} from "react-router-dom";
+import { Link as ReactLink} from "next/link";
 import Theme from "./Theme";
 
 const ListHeader = ({ children }) => {
@@ -51,18 +51,18 @@ export default function Footer() {
             </Stack>
             <Stack align={"flex-start"}>
               <ListHeader>Organization</ListHeader>
-              <Link as={ReactLink} to='/AboutUs'>About</Link>
-              <Link as={ReactLink} to='/ContactUs'>Contact</Link>
-              <Link as={ReactLink} to='/Partners'>Partners</Link>
+              <Link as={ReactLink} href='/About'>About</Link>
+              <Link as={ReactLink} href='/ContactUs'>Contact</Link>
+              <Link as={ReactLink} href='/Partners'>Partners</Link>
             </Stack>
             <Stack align={"flex-start"}>
               <ListHeader>Support</ListHeader>
-              <Link as={ReactLink} to='/Help'>Help Center</Link>
-              <Link as={ReactLink} to='/SearchGuides'>SearchGuides</Link>
-              <Link as={ReactLink} to='/PostingGuides'>PostingGuides</Link>
-              <Link as={ReactLink} to='/Safety'>Safety</Link>
-              <Link as={ReactLink} to='/Terms'>Terms of Service</Link>
-              <Link as={ReactLink} to='/Privacy'>Privacy Policy</Link>
+              <Link as={ReactLink} href='/Help'>Help Center</Link>
+              <Link as={ReactLink} href='/SearchGuides'>SearchGuides</Link>
+              <Link as={ReactLink} href='/PostingGuides'>PostingGuides</Link>
+              <Link as={ReactLink} href='/Safety'>Safety</Link>
+              <Link as={ReactLink} href='/Terms'>Terms of Service</Link>
+              <Link as={ReactLink} href='/Privacy'>Privacy Policy</Link>
               
             </Stack>
             <Stack align={"flex-start"}>

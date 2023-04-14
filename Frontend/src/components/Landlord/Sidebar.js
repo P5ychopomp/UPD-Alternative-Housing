@@ -32,6 +32,7 @@ import {
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
+import { Image as NextImage } from 'next/image'
 
 const LinkItems = [
   { name: "Home", icon: FiHome },
@@ -85,6 +86,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" mb='10'>
         <Image
+          as={NextImage}
           className="navbar-logo"
           src="USC-Logo2.png"
           alt="USC Logo"

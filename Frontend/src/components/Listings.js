@@ -1,7 +1,7 @@
 import Card from './Card'
 import { Container, Flex } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const Listings = ({ properties }) => {
 
@@ -11,8 +11,9 @@ const Listings = ({ properties }) => {
                 <Flex flexWrap='wrap' justifyContent='center' gap={6}>
                     {properties.map((property) => (
                         <div key={property.property_id} >
-                            <Link to={{
-                                pathname: `/${property.property_id}`,
+                            <Link href={{
+                                pathname: 'Property',
+                                query: { id: `${property.property_id}`}, 
                             }
                             } target="_blank">
                                 <Card property={property} />

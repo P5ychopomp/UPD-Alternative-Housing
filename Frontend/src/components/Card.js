@@ -1,7 +1,7 @@
 import { Box, Image, Badge, ChakraProvider, Text, Divider } from '@chakra-ui/react'
 import { Icon } from '@iconify/react'
 import Theme from './Theme'
-import './styles/Card.css'
+import './styles/Card.module.css'
 
 const Card = ({ property }) => {
   return (
