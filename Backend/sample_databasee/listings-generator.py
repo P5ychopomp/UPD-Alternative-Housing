@@ -4,9 +4,9 @@ import json
 property_name = []
 properties = []
 
-for x in range(1,301):                                   # property_id, property_name
+for x in range(1,100):                                   # property_id, property_name
     house = 'House' + str(x) 
-    property_name.append([x+1000000, house])
+    property_name.append([x, house])
 
 loyola_heights = ['A. Melchor', 'A. Regidor', 'Alta Vista', 'Aurora Blvd', 'Avelino', 'B. Burgos', 'B. Gonzales', 'C. Salvador', 'College Lane', 'Esteban Abada St', 'F. Collantes', 'F. Dela Rosa', 'Father Arrupe Rd', 'Father Masterson Dr', 'Garcia', 'Guerrero', 'J. Bocobo', 'J. Escaler', 'J. P. Burgos', 'J. P. Laurel', 'Jade', 'Jesuit Residence Lane', 'Jocson', 'Katipunan Ave', 'Laurel', 'M. Delos Santos', 'M. V. Del Rosario', 'Magsaysay', 'Mangyan Rd', 'Marymount', 'Melissa Dr', 'Narra', 'Nicanor Reyes', 'Osmena', 'Pajo', 'Palma', 'Parade loop', 'Park 9', 'President Carlos P. Garcia Ave', 'Quezon', 'Quirino', 'Quisumbing Drive', 'Rosa Alvero', 'Roxas', 'Seminary Rd', 'T. Evangelista', 'Thornton Drive', 'Topside Valley', 'University Road', 'Xavierville Ave', 'Zen Garden Path']
 
@@ -37,6 +37,8 @@ for e in property_name:
     occupancy = random.randint(1, 6)
     furnishing = random.choice(['None','Semi', 'Full'])
     curfew = random.randint(0, 1)                       # curfew
+    landlord_id = random.randint(1,15)  
+    url = 'property_img/'+e[1]+'.png'
 
     if lot_type == 'Dormitory':
         rate = random.randrange(1000,4000,250)
@@ -67,6 +69,7 @@ for e in property_name:
     e.append(occupancy)
     e.append(furnishing)
     e.append(curfew)
+    e.append(landlord_id)
     
     date = random.choice(['2022','2023'])               
     month = random.randint(1, 12)
@@ -79,6 +82,8 @@ for e in property_name:
         day = '0' + str(day)
     date += '-' + str(day)
     e.append(date)                                      # date_posted
+
+    e.append(url)
 
     d = {}
     d.update({
@@ -97,11 +102,13 @@ for e in property_name:
         'occupancy': e[12],
         'furnishing': e[13],
         'curfew': e[14],
-        'date_posted': e[15],
+        'landlord_id': e[15],
+        'date_posted': e[16],
+        'img_url': e[17],
     })
     properties.append(d)
 
-with open("./sample_databasee/sampledatabase2.json", "w") as outfile:
+with open("sampledatabase3.json", "w") as outfile:
     outfile.write("{\n\"listings\":"+json.dumps(properties, indent=4)+"}")
 
     

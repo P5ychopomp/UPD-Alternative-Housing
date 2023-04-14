@@ -9,7 +9,7 @@ var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 
 var cors = require('cors');
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(express.urlencoded({ extended: false }));
 
 // Session Storage
@@ -28,28 +28,12 @@ app.use(
   );
 
 // User authentication routes
-var authRouter = require('./routes/auth').router;
+var authRouter = require('./routes/auth');
 app.use('/', authRouter);
 
 /*** DASHBOARD ***/
-
 app.get("/dashboard", ensureLoggedIn, (req, res) => {
-    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate');
-    const user = req.user;
-    res.send(`
-        <meta http-equiv="Cache-Control" content="no-cache, no-store">
-        <h1>DASHBOARD</h1>
-        <ul>
-        <li> Name: ${user.name} </li>
-        <li> Email:${user.email} </li>
-        </ul>
-        <form action="/logout" method="post">
-        <button class="logout" type="submit">Logout</button>
-        </form>
-        <form action="/api/delete?pid=250" method="post">
-        <button class="logout" type="submit">Delete</button>
-        </form>
-    `)
+    res.send({message: 100});
 });
 
 
@@ -79,21 +63,42 @@ app.get("/api/listings/:pid", queryResults, queryDB, (req,res)=>{
     })
 })
 
-app.post("/api/update", updateProperty, queryDB, (req,res)=>{ // should be POST
+app.get("/api/update", updateProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
-app.post("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
+app.get("/api/insert", insertProperty, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
     })
 })
 
-app.post("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
+app.get("/api/delete", ensureLoggedIn, deleteProperty, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/accounts", ensureLoggedIn, queryAccount, queryDB, (req,res)=>{ 
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/updateAcc", ensureLoggedIn, updateAccount, queryDB, (req,res)=>{ // should be POST
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+app.get("/api/deleteAcc", ensureLoggedIn, deleteAccount, queryDB, (req,res)=>{ // should be POST
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json({data})
@@ -177,19 +182,6 @@ class lotmax extends queryField{
 class furnished extends queryField{
     constructor(value){
         super("furnishing = ?", value);
-        this.sql=[];
-        this.v=[];
-        if (this.value != null){
-            for (let key of this.value){
-                this.sql.push(this.filter);
-                this.v.push(["None","Semi","Full"][key]);
-            }
-            this.filter=this.sql.join(" OR ");
-            console.log(this.filter);
-        }
-    }
-    getFormatted(){
-        return this.v;
     }
 }
 class curfew extends queryField{
@@ -200,46 +192,16 @@ class curfew extends queryField{
 class type extends queryField{
     constructor(value){
         super("lot_type = ?", value);
-        this.sql=[];
-        this.v=[];
-        if (this.value != null){
-            for (let key of this.value){
-                this.sql.push(this.filter);
-                this.v.push(["Condominium","Dormitory","Apartment","Boarding House"][key]);
-            }
-            this.filter=this.sql.join(" OR ");
-            console.log(this.filter);
-        }
-    }
-    getFormatted(){
-        return this.v;
     }
 }
 class occupancy extends queryField{
     constructor(value){
         super(value==1 ? "occupancy > 1" : "occupancy <= 1", value);
     }
-    getFormatted(){
-        return [];
-    }
 }
 class stay extends queryField{
     constructor(value){
-        super("(min_month_stay >= ? AND min_month_stay <= ?)", value);
-        this.sql=[];
-        this.v=[];
-        if (this.value != null){
-            for (let key of this.value){
-                this.sql.push(this.filter);
-                this.v.push([0,7,13][key]);
-                this.v.push([6,12,24][key]);
-            }
-            this.filter=this.sql.join(" OR ");
-            console.log(this.filter);
-        }
-    }
-    getFormatted(){
-        return this.v;
+        super("min_month_stay >= ? AND min_month_stay <= ?", value);
     }
 }
 class amenities extends queryField{
@@ -322,6 +284,7 @@ class sqlQuery{
     build(){
         for (let key of Object.keys(this.req)){    // append each filter parameter in request to sql statement
             // guard clause against special characters
+            console.log(key);
             if (!this.noSpecialCharacters(String(this[key].getValue()))){
                 return 400;
             }
@@ -347,12 +310,12 @@ class propertyQuery extends sqlQuery{
         this.ratemax=new ratemax(fields.ratemax); 
         this.lotmin=new lotmin(fields.lotmin);
         this.lotmax=new lotmax(fields.lotmax);
-        this.furnished=new furnished(fields.furnished); 
+        this.furnished=new furnished(["None","Semi","Full"][fields.furnished%3]); 
         this.curfew=new curfew(fields.curfew);
-        this.type=new type(fields.type);
-        this.occupancy=new occupancy(fields.occupancy);
-        this.stay=new stay(fields.stay);
-        this.inclusions=new amenities(fields.inclusions);
+        this.type=new type(["Condominium", "Dormitory", "Apartment", "Boarding House"][fields.type%4]);
+        this.occupancy=new occupancy([]);
+        this.stay=new stay([[0,7,13][fields.stay], [6,12,24][fields.stay]]);
+        this.a=new amenities(fields.a);
 
         this.pid=new propertyID(fields.pid);   // property ID
         this.lid= new landlordID(fields.lid);  // landlord ID
@@ -416,12 +379,11 @@ class insertQuery extends sqlQuery{
         this.pid = new queryField("property_id",fields.pid);   // property ID
         this.pname = new queryField("property_name",fields.pname);
         this.add = new queryField("street_address",fields.add);
-        this.brgy =new queryField("brgy",fields.brgy);
-        this.city =new queryField("city_municip",fields.city);
+        this.brgy =new queryField("municip_brgy",fields.brgy);
+        this.city =new queryField("city",fields.city);
         this.area = new queryField("lot_area",fields.city);
         this.type = new queryField("lot_type",fields.type);
-        this.minstay = new queryField("min_month_stay",fields.minstay);
-        this.occupancy = new queryField("occupancy",fields.curfew);
+        this.minstay = new queryField("min_stay",fields.minstay);
         this.curfew = new queryField("curfew",fields.curfew);
         this.other = new queryField("other_details",fields.other);
         this.img = new queryField("img_url",fields.img);
@@ -443,7 +405,7 @@ class deleteQuery extends sqlQuery{
         super("DELETE FROM properties ", fields);
 
         this.pid =  new queryField("property_id",fields.pid);   // property ID
-        this.lid =  new queryField("landlord_id",fields.lid);   // landlord ID
+        this.lid =  new queryField("landlord_id",fields.lid);   // property ID
     }
     formatFilters(key){
         if (key=="pid" || key=="lid")
@@ -525,20 +487,20 @@ function queryResults(req, res, next){
 }
 
 function updateProperty(req, res, next){
-    req.body.lid=req.user.id;
-    req.sql = new updateQuery(req.body);
+    req.query.lid=req.user.id;
+    req.sql = new updateQuery(req.query);
     next();
 }
 
 function insertProperty(req, res, next){
-    req.body.lid=req.user.id;
-    req.sql = new insertQuery(req.body);
+    req.query.lid=req.user.id;
+    req.sql = new insertQuery(req.query);
     next();
 }
 
 function deleteProperty(req, res, next){
-    req.body.lid=req.user.id;
-    req.sql = new deleteQuery(req.body);
+    req.query.lid=req.user.id;
+    req.sql = new deleteQuery(req.query);
     next();
 }
 
@@ -549,14 +511,14 @@ function queryAccount(req, res, next){
 }
 
 function updateAccount(req, res, next){
-    req.body.lid=req.user.id;
-    req.sql = new updateAccountQuery(req.body);
+    req.query.lid=req.user.id;
+    req.sql = new updateAccountQuery(req.query);
     next();
 }
 
 function deleteAccount(req, res, next){
-    req.body.lid=req.user.id;
-    req.sql = new deleteAccountQuery(req.body);
+    req.query.lid=req.user.id;
+    req.sql = new deleteAccountQuery(req.query);
     next();
 }
 
