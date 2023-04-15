@@ -9,7 +9,7 @@ var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 
 var cors = require('cors');
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: 'https://upd-alternative-housing-production.up.railway.app'}));
 app.use(express.urlencoded({ extended: false }));
 
 // Session Storage
