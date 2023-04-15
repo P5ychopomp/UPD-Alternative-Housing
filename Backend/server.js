@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 require("dotenv").config();
-const PORT = 3030;
+const PORT = process.env.PORT || 3030;
 const pool = require('./db_config').pool;
 const session = require("express-session");
 const bcrypt = require("bcrypt");
