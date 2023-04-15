@@ -534,6 +534,6 @@ function queryDB(req, res, next){
     next();
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
   });
