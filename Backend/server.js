@@ -331,9 +331,8 @@ class propertyQuery extends sqlQuery{
         super.build();
         if (this.queryFilters.length)
             this.sql+="WHERE " + this.queryFilters.join(" AND ");
-        this.sql+=" LIMIT 20";  // add limit to db query result
         if (this.page.getValue()!=null)
-            this.sql+=" OFFSET " + 20*(this.page.getValue()-1); // add limit to db query result
+            this.sql+=" LIMIT 20 OFFSET " + 20*(this.page.getValue()-1); // add limit to db query result
     }
 }
 
