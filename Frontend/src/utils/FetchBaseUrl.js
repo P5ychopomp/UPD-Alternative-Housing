@@ -1,3 +1,4 @@
+import { fetchAuth } from "./FetchAuth"
 
-export const fetchBaseUrl = 'https://13.213.54.68:3001/api/listings'
+export const fetchBaseUrl = `${fetchAuth}/api/listings`
 
