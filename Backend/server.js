@@ -9,7 +9,7 @@ var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 
 var cors = require('cors');
-app.use(cors({credentials: true, origin: ,"https://upd-alternative-housing.vercel.app/", optionsSuccessStatus: 200}));
+app.use(cors({credentials: true, origin: "https://upd-alternative-housing.vercel.app/", optionsSuccessStatus: 200}));
 app.use(express.urlencoded({ extended: false }));
 
 // Session Storage
