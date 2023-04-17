@@ -8,17 +8,16 @@ const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
 var cors = require('cors');
-app.use(cors({credentials: true, origin: 'http://localhost:3000/'}));
+app.use(cors({credentials: true, origin: 'http://localhost:3000', optionsSuccessStatus: 200}));
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Credentials", true);
-//     next();
-//   });
-// var corsOptions = {
-//   origin: 'http://localhost:3000/',
-//   withCredentials: false,
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
+    next();
+  });
 
 function initializePassport(passport) {
     console.log("Initialized");
