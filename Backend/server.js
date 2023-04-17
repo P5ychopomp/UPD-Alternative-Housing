@@ -28,6 +28,7 @@ app.use(
         sameSite: 'none',
         secure: true,
       }
+      exposedHeaders: ["set-cookie"],
     })
   );
 
