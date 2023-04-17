@@ -8,12 +8,7 @@ const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
 var cors = require('cors');
-app.use(cors({credentials: false, origin: 'http://localhost:3000', optionsSuccessStatus: 200}));
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*")
-    next();
-  });
+app.use(cors({credentials: true, origin: ["http://localhost:3000","https://upd-alternative-housing.vercel.app/"], optionsSuccessStatus: 200}));
 
 function initializePassport(passport) {
     console.log("Initialized");
@@ -179,26 +174,26 @@ router.get("/login", checkAuthenticated, (req, res) => { // results page
 router.get("/login_page", checkAuthenticated, (req,res)=>{ // results page
   res.sendFile('temp_login.html',{root: __dirname})})
 
-router.post("/login", function(req, res, next) {
+/* router.post("/login", function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
       console.log("Authenticating...")
       if (err) { return next(err) }
       console.log(user)
-      // Error 101: Invalid Credentials
-      if (!user) {return res.send({message: 101}) }
+      // Error 401: Invalid Credentials
+      if (!user) {return res.send({message: 401}) }
 
-      // Success 100: User Logged In
-      res.send({message: 100});
+      // Success 400: User Logged In
+      res.send({message: 400, });
     })(req, res, next);
-  });
+  }); */
   
-// router.post(
-//   "/login",
-//   passport.authenticate("local", {
-//     successMessage: true,
-//     failureMessage,
-//   })
-// );
+router.post(
+  "/login",
+  passport.authenticate("local",{
+    successRedirect: "/",
+    failureRedirect: "/login"
+  })
+);
 
 
 /***** USER LOGOUT*****/
