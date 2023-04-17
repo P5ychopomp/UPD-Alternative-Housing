@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
 import Layout from "@/components/Layout";
+import { fetchAuth } from "@/utils/FetchAuth";
 
 const LandlordLogin = () => {
   const [email, setEmail] = useState("");
@@ -29,9 +30,8 @@ const LandlordLogin = () => {
   Axios.defaults.withCredentials = true;
 
  
-  const login = () => {
-    
-    Axios.post("http://localhost:3001/login", {
+  const login = async () => {
+    await Axios.post(`${fetchAuth}/login`, {
       email: email,
       password: password,
     }, {
@@ -39,13 +39,9 @@ const LandlordLogin = () => {
         "Content-Type": "application/x-www-form-urlencoded"
       }
     }).then((response) => {
-      if (response.data.message === 100) {
-        navigate("/CreateProperty");
-      } else {
-        console.log(response.data.message);
-      }
-    });
-  };
+      console.log(response.headers["set-cookie"])
+    })}
+  ;
 
   return (
     <ChakraProvider theme={Theme}>
@@ -123,7 +119,7 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-              <Link as={NextLink} to='/CreateProperty'>
+              
               <Button
                   loadingText="Submitting"
                   size="lg"
@@ -132,16 +128,17 @@ const LandlordLogin = () => {
                   _hover={{
                     bg: "upd.700",
                   }}
+                  onClick={login}
                 >
                   Log in
                 </Button>
-                </Link>
+                
                   
                 
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <Text>
-                  Don&apos;t have an account?
+                  Don&apos;t have an account?{" "}
                   <Link as={NextLink} href="/Landlord/Register" color={"upd.400"}>
                     Sign up
                   </Link>
