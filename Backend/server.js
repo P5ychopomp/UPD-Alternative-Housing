@@ -27,7 +27,7 @@ app.use(
       cookie: {
         sameSite: 'none',
         secure: true,
-      }
+      },
       exposedHeaders: ["set-cookie"],
     })
   );
