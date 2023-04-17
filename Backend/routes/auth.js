@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
 var cors = require('cors');
-app.use(cors({credentials: true, origin: "https://upd-alternative-housing.vercel.app/", optionsSuccessStatus: 200}));
+app.use(cors({credentials: true, origin: "https://upd-alternative-housing.vercel.app", optionsSuccessStatus: 200}));
 
 function initializePassport(passport) {
     console.log("Initialized");
