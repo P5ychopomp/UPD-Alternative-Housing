@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
 var cors = require('cors');
-app.use(cors({credentials: true, origin: 'http://localhost:3000', optionsSuccessStatus: 200}));
+app.use(cors({credentials: false, origin: 'http://localhost:3000', optionsSuccessStatus: 200}));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")
