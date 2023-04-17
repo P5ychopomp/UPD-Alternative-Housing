@@ -10,6 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as ReactLink} from "next/link";
+import { Image as NextImage } from "next/image"
 import Theme from "./Theme";
 
 const ListHeader = ({ children }) => {
@@ -36,8 +37,9 @@ export default function Footer() {
             <Stack spacing={6}>
               <Box>
                 <Image
+                  as={NextImage}
                   className="navbar-logo"
-                  src="USC-Logo2.png"
+                  src="/USC-Logo2.png"
                   alt="USC Logo"
                   h="4em"
                   ml="0"
