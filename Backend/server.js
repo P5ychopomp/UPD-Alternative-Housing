@@ -23,7 +23,13 @@ app.use(
       // Save empty value if there is no value
       saveUninitialized: false,
       // Use the mysql session store
-      store: sessionStore
+      store: sessionStore,
+
+      cookie: {
+        sameSite: 'none',
+        secure: true,
+      }
+      
     })
   );
 

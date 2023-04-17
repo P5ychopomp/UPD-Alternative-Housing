@@ -156,10 +156,7 @@ router.get("/login", checkAuthenticated, (req,res)=>{ // results page
 
 router.post(
   "/login",
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login",
-  })
+  passport.authenticate("local", {})
 );
 
 /***** USER LOGOUT*****/
