@@ -19,31 +19,35 @@ import Theme from "../../components/Theme";
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
+import AxiosError from "axios";
+import { fetchAuth } from "../../utils/FetchAuth";
+import { useSignIn } from "react-auth-kit";
 
 const LandlordLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const signIn = useSignIn();
   Axios.defaults.withCredentials = true;
 
- 
-  const login = () => {
-    
-    Axios.post("http://localhost:3001/login", {
-      email: email,
-      password: password,
-    }, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then((response) => {
-      if (response.data.message === 100) {
-        navigate("/CreateProperty");
-      } else {
-        console.log(response.data.message);
-      }
-    });
+  const login = async () => {
+    setError("");
+      await Axios.post(
+        `${fetchAuth}/login`,
+        {
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      ).then((response) => {
+        console.log(response.data);
+      });
   };
 
   return (
@@ -58,7 +62,7 @@ const LandlordLogin = () => {
           </Text>
         </Stack>
         <Stack>
-          <Heading mt='20' mb='2'fontSize={"4xl"} color="upd.700">
+          <Heading mt="20" mb="2" fontSize={"4xl"} color="upd.700">
             Login
           </Heading>
 
@@ -68,7 +72,6 @@ const LandlordLogin = () => {
             boxShadow="0px 0px 15px 1px #dbdbdb"
             padding="5"
             minW="60%"
-            
           >
             <Grid
               templateRows="repeat(7, 1fr)"
@@ -92,10 +95,13 @@ const LandlordLogin = () => {
               <GridItem colSpan={4} rowSpan={1}></GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-                <Input placeholder="Email" size="lg" 
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                          }}/>
+                <Input
+                  placeholder="Email"
+                  size="lg"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                />
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <InputGroup size="lg">
@@ -120,20 +126,19 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-              <Link as={ReactLink} to='/CreateProperty'>
-              <Button
-                  loadingText="Submitting"
-                  size="lg"
-                  bg={"upd.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "upd.700",
-                  }}
-                >
-                  Log in
-                </Button>
-                </Link>
-                  
+                
+                  <Button
+                    loadingText="Submitting"
+                    size="lg"
+                    bg={"upd.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "upd.700",
+                    }}
+                    onClick={login}
+                  >
+                    Log in
+                  </Button>
                 
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>

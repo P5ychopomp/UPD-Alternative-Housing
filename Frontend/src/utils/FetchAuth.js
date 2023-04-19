@@ -1,3 +1,1 @@
-
-export const fetchAuth = 'http://13.213.54.68:3001'
-
+export const fetchAuth = `https://upd-alternative-housing-api.onrender.com`
