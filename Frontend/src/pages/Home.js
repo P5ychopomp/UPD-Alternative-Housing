@@ -60,11 +60,13 @@ function Home() {
           <Search
             keywords={keywords}
             setKeywords={setKeywords}
-            query={query}
             setQuery={setQuery}
+            filters={searchFilters}
+            setFilters={setSearchFilters}
             sfVisible={sfVisible}
             setSfVisible={setSfVisible}
           />
+          {console.log(searchFilters)}
           {sfVisible && (
             <Container minWidth="90%" mt="-5">
               <SearchFilters

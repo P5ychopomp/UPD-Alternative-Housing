@@ -20,6 +20,8 @@ const Search = ({
   sfVisible,
   setSfVisible,
   setQuery,
+  setFilters,
+  filters,
 }) => {
   const toast = useToast();
   const [isError, setisError] = useState(false);
@@ -76,7 +78,9 @@ const Search = ({
                         });
                       } else {
                         setisError(false);
+                        console.log(filters);
                         setQuery(`q=${keywords}`);
+                        setFilters(`${filters}`);
                       }
                     }
                   }}
@@ -97,8 +101,10 @@ const Search = ({
                   if (keywords.match(/[`'/*%;+|<>=!.-]/)) {
                     setisError(true);
                   } else {
+                    console.log(filters);
                     setisError(false);
                     setQuery(`q=${keywords}`);
+                    setFilters(`${filters}`);
                   }
                 }}
               />

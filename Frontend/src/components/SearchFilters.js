@@ -52,8 +52,9 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
       sfminStay: minStay,
       sfinclusion: inclusion
     }
+    const sffilters = filters;
     sessionStorage.setItem("rawFilters", JSON.stringify(sf))
-    sessionStorage.setItem("filters", JSON.stringify(filters))
+    sessionStorage.setItem("filters", JSON.stringify(sffilters))
 
   }, [filters, curfew, furnishType, inclusion, lotArea, lotType, minStay, occupy, rate])
 
