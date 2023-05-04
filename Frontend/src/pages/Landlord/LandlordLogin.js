@@ -46,7 +46,7 @@ const LandlordLogin = () => {
           },
         }
       ).then((response) => {
-        console.log(response.data);
+        console.log(response.headers);
       });
   };
 
