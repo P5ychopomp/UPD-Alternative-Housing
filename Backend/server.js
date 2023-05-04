@@ -26,7 +26,7 @@ var sess = {
   // Should we resave our session variables if nothing has changes
   resave: false,
   // Save empty value if there is no value
-  saveUninitialized: false,
+  saveUninitialized: true,
   // Use the mysql session store
   store: sessionStore,
   cookie: {
