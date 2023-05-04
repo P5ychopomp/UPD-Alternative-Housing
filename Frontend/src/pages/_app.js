@@ -1,7 +1,6 @@
 import Layout from "@/components/Layout";
 import "@/styles/globals.css";
 import Head from "next/head";
-import { AuthProvider } from "react-auth-kit";
 
 export default function App({ Component, pageProps, router }) {
   if (!router.pathname.startsWith("/Landlord")) {
