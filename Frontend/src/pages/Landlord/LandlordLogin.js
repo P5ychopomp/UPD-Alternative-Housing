@@ -41,12 +41,13 @@ const LandlordLogin = () => {
           password: password,
         },
         {
+          credentials: 'include',
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       ).then((response) => {
-        console.log(response.headers);
+        console.log(response.headers[]);
       });
   };
 
