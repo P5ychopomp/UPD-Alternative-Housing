@@ -24,16 +24,16 @@ var sess = {
   // Key we want to keep secret which will encrypt all of our information
   secret: process.env.SESSION_SECRET,
   // Should we resave our session variables if nothing has changes
-  resave: false,
+  resave: true,
   // Save empty value if there is no value
-  saveUninitialized: false,
+  saveUninitialized: true,
   // Use the mysql session store
   store: sessionStore,
   cookie: {
+    httpOnly: true,
     sameSite: "none",
     secure: true,
   },
-  proxy: true,
 };
 if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
