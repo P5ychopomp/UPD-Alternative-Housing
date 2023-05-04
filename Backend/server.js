@@ -24,9 +24,9 @@ var sess = {
   // Key we want to keep secret which will encrypt all of our information
   secret: process.env.SESSION_SECRET,
   // Should we resave our session variables if nothing has changes
-  resave: true,
+  resave: false,
   // Save empty value if there is no value
-  saveUninitialized: true,
+  saveUninitialized: false,
   // Use the mysql session store
   store: sessionStore,
   cookie: {
