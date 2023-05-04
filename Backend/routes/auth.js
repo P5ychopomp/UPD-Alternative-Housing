@@ -134,7 +134,7 @@ router.post("/register", async (req, res) => {
 
   if (!strongPassword.test(password)) {
     // Error 201: Weak Password
-    res.send({ message: 201 });
+    res.send({ message: "Your password is too weak. Please choose a stronger password." });
   }
 
   if (errors.length > 0) {
@@ -154,7 +154,7 @@ router.post("/register", async (req, res) => {
 
         if (results.length > 0) {
           // Error 202 : Account already used
-          res.send({ message: 202 });
+          res.sendStatus(409);
         } else {
           console.log("Inserting to database...");
           console.log({ first_name, last_name, email, hashedPassword });
@@ -168,7 +168,7 @@ router.post("/register", async (req, res) => {
               }
               console.log("You are now registered. Please log in");
               // Success 200: Email Registered
-              res.send({ message: 200 });
+              res.sendStatus(200);
             }
           );
         }
@@ -194,26 +194,26 @@ router.get("/login_page", checkAuthenticated, (req, res) => {
   res.sendFile("temp_login.html", { root: __dirname });
 });
 
-/* router.post("/login", function(req, res, next) {
+router.post("/login", function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
       console.log("Authenticating...")
       if (err) { return next(err) }
       console.log(user)
       // Error 401: Invalid Credentials
-      if (!user) {return res.send({message: 401}) }
+      if (!user) { return res.sendStatus(401) }
 
       // Success 400: User Logged In
-      res.send({message: 400, });
+      return res.sendStatus(200);
     })(req, res, next);
-  }); */
+  });
 
-router.post(
+/* router.post(
   "/login",
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
   })
-);
+); */
 
 /***** USER LOGOUT*****/
 router.post("/logout", function (req, res, next) {
@@ -221,14 +221,14 @@ router.post("/logout", function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    return res.sendStatus(200);
   });
 });
 
 // Middleware
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect("/dashboard");
+    return res.sendStatus(200);
   }
   next();
 }
@@ -238,7 +238,7 @@ function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/login");
+  return res.sendStatus(200);
 }
 
 module.exports = router;
