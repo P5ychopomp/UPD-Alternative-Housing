@@ -12,7 +12,7 @@ var cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: ["https://upd-alternative-housing.vercel.app", "http://localhost:3000"],
+    origin: ["https://upd-alternative-housing.vercel.app", "http://localhost:3000", "https://upd-alternative-housing.netlify.app"],
     optionsSuccessStatus: 200,
   })
 );
