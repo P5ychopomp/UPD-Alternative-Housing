@@ -23,13 +23,13 @@ import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
 
 export const LandlordCreateProperty = () => {
-  useEffect(() = {
+  useEffect(() => {
     Axios.get(`${fetchAuth}/login`).then((response) => {
       if (response.data.loggedIn === false) {
-        navigate("/")
+        navigate("/");
       }
     })
-  })
+  },[]);
   return <SidebarWithHeader children={<Content />} />;
 };
 
