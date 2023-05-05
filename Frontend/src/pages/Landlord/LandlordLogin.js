@@ -47,7 +47,11 @@ const LandlordLogin = () => {
           },
         }
       ).then((response) => {
-        console.log(response.headers);
+        if (response.status == 200) {
+          navigate("/LandlordCreateProperty")
+        } else {
+          navigate("/LandlordRegistration")
+        }
       });
   };
 
