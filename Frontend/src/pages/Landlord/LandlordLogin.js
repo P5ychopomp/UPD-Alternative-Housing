@@ -48,7 +48,7 @@ const LandlordLogin = () => {
         }
       ).then((response) => {
         if (response.status == 200) {
-          navigate("/LandlordCreateProperty")
+          navigate("/CreateProperty")
         } else {
           navigate("/LandlordRegistration")
         }
