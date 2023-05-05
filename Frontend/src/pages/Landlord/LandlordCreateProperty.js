@@ -23,14 +23,13 @@ import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
 
 export const LandlordCreateProperty = () => {
-  const navigate = useNavigate();
+  
   return <SidebarWithHeader children={<Content />} />;
 };
 
 const Content = () => {
-  
+  const navigate = useNavigate();
   const [loginStatus, setLoginStatus] = useState(false);
-
   const logout = async () => {
     await Axios.post(`${fetchAuth}/logout`).then((response) => {
       if (response.status === 200) {
