@@ -180,13 +180,10 @@ router.post("/register", async (req, res) => {
 /**** USER LOGIN ****/
 router.get("/login", checkAuthenticated, (req, res) => {
   // results page
-  console.log(req.user);
-  if (req.user) {
-    res.send({ loggedIn: true, user: req.session.user });
-  } else {
-    console.log("GET /login");
-    res.send({ loggedIn: false });
+  if (req.isAuthenticated()) {
+    res.status(200).json({ message: 'Authorized'});
   }
+  res.status(401).json({ message: 'Unauthorized' }); // User is not authenticated
 });
 
 // Login page for backend testing
