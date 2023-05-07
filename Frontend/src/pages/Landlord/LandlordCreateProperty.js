@@ -21,6 +21,7 @@ import Axios from "axios";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
+Axios.defaults.withCredentials = true;
 
 export const LandlordCreateProperty = () => {
  const navigate = useNavigate();
