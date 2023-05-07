@@ -180,7 +180,7 @@ router.post("/register", async (req, res) => {
 /**** USER LOGIN ****/
 router.get("/login", checkAuthenticated, (req, res) => {
   // results page
-  console.log(req.session);
+  console.log(req);
   if (req.user) {
     res.send({ loggedIn: true, user: req.session.user });
   } else {
