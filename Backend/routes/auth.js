@@ -172,6 +172,7 @@ router.post("/register", async (req, res) => {
 router.get("/checkAuth", (req, res) => {
   // results page
   console.log(req.session);
+  console.log(req.user);
   if (req.isAuthenticated()) {
     return res.status(200).json({ message: 'Authorized'});
   } else {
