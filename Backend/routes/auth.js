@@ -7,15 +7,6 @@ var LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 var pool = require("../db_config").pool;
 
-var cors = require("cors");
-app.use(
-  cors({
-    credentials: true,
-    origin: ["https://upd-alternative-housing.vercel.app", "http://localhost:3000"],
-    optionsSuccessStatus: 200,
-  })
-);
-
 function initializePassport(passport) {
   console.log("Initialized");
 
