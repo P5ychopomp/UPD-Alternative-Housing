@@ -21,16 +21,18 @@ import Axios from "axios";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { fetchAuth } from "../../utils/FetchAuth.js";
+Axios.defaults.withCredentials = true;
 
 export const LandlordCreateProperty = () => {
- /*  const navigate = useNavigate();
+ const navigate = useNavigate();
   useEffect(() => {
     Axios.get(`${fetchAuth}/login`).then((response) => {
-      if (response.data.loggedIn === false) {
+      console.log(response.data.message);
+      if (response.data.message === 'Unauthorized') {
         navigate("/");
       }
     })
-  },[]); */
+  }); 
   return <SidebarWithHeader children={<Content />} />;
 };
 
