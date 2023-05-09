@@ -169,8 +169,9 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-router.get("/login", checkAuthenticated, (req, res) => {
+router.get("/checkAuth", (req, res) => {
   // results page
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     return res.status(200).json({ message: 'Authorized'});
   } else {
