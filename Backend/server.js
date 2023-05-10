@@ -39,7 +39,8 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
   sess.cookie.secure = true; // serve secure cookies
 }
-app.use(session(sess));
+app.use(passport.authenticate('session'));
+// app.use(session(sess));
 
 // User authentication routes
 var authRouter = require("./routes/auth");
