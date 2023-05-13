@@ -42,7 +42,8 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sess));
-app.use(passport.authenticate('session'));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // User authentication routes
 var authRouter = require("./routes/auth");
