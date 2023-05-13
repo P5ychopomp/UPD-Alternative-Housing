@@ -45,6 +45,7 @@ app.use(session(sess));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 // User authentication routes
 var authRouter = require("./routes/auth");
 app.use("/", authRouter);
