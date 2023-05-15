@@ -10,6 +10,7 @@ var ensureLoggedIn = ensureLogIn();
 var passport = require('passport');
 
 const initializePassport = require("./routes/passport_config");
+
 initializePassport(passport); 
 
 var cors = require("cors");
