@@ -3,7 +3,7 @@ const { pool } = require("../db_config").pool;
 
 const bcrypt = require("bcrypt");
 
-function initializePassport(passport) {
+function initialize(passport) {
     console.log("Initialized");
   
     // Use passport-local strategy (cookies and session)
