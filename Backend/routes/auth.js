@@ -91,7 +91,7 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-router.get("/checkAuth", checkAuthenticated, (req, res) => {
+router.get("/checkAuth", (req, res) => {
   // results page
   console.log(req.session);
   console.log(req.sessionID);
@@ -104,7 +104,7 @@ router.get("/checkAuth", checkAuthenticated, (req, res) => {
 });
 
 // Login page for backend testing
-router.get("/login_page", checkAuthenticated, (req, res) => {
+router.get("/login_page", (req, res) => {
   // results page
   res.sendFile("temp_login.html", { root: __dirname });
 });
