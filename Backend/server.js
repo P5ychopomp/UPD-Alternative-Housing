@@ -9,6 +9,9 @@ var ensureLogIn = require("connect-ensure-login").ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 var passport = require('passport');
 
+const initializePassport = require("./passport_config");
+initializePassport(passport); 
+
 var cors = require("cors");
 app.use(
   cors({
