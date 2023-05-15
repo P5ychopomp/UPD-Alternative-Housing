@@ -61,7 +61,7 @@ function initializePassport(passport) {
      * Since every request to the app needs the user ID and username, in order to
      * fetch records and show the user element, that information is stored in the session.
      */
-    passport.serializeUser((user, done) => done(null, user.id));
+    passport.serializeUser((user, done) => done(null, user.email));
   
     passport.deserializeUser((id, done) => {
       pool.query(`SELECT * FROM accounts WHERE id = ?`, [id], (err, results) => {
