@@ -91,16 +91,8 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-router.get("/checkAuth", (req, res) => {
-  // results page
-  console.log(req.session);
-  console.log(req.sessionID);
-  if (req.session) {
-    return res.status(200).json({ message: 'Authorized'});
-  } else {
-    return res.status(401).json({ message: 'Unauthorized' })
-  }
-  ; // User is not authenticated
+app.get('/api/check-authentication', (req, res) => {
+  res.json({ isAuthenticated: req.isAuthenticated() });
 });
 
 // Login page for backend testing
