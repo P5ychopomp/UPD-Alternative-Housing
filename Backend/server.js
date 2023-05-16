@@ -25,30 +25,30 @@ app.use(express.urlencoded({ extended: false }));
 
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
-var sess = {
-  // Key we want to keep secret which will encrypt all of our information
-  secret: process.env.SESSION_SECRET,
-  // Should we resave our session variables if nothing has changes
-  resave: true,
-  // Save empty value if there is no value
-  saveUninitialized: true,
-  // Use the mysql session store
-  store: sessionStore,
-  cookie: {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  },
-};
+app.use(
+	session({
+		// Key we want to keep secret which will encrypt all of our information
+		secret: process.env.SESSION_SECRET,
+		// Should we resave our session variables if nothing has changes
+		resave: true,
+		// Save empty value if there is no value
+		saveUninitialized: true,
+		// Use the mysql session store
+		store: sessionStore,
+		cookie: {
+			httpOnly: true,
+			sameSite: "none",
+			secure: true,
+		},
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
   sess.cookie.secure = true; // serve secure cookies
 }
-
-app.use(session(sess));
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 // User authentication routes
 var authRouter = require("./routes/auth");

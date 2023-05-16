@@ -109,18 +109,21 @@ router.get("/login_page", (req, res) => {
   res.sendFile("temp_login.html", { root: __dirname });
 });
 
-router.post("/login", function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-      console.log("Authenticating...")
-      if (err) { return next(err) }
-      console.log(user)
-      // Error 401: Invalid Credentials
-      if (!user) { return res.sendStatus(401) }
+router.post("/login", function (req, res, next) {
+	passport.authenticate("local", function (err, user, info) {
+		console.log("Authenticating...");
+		if (err) {return next(err);}
 
-      // Success 400: User Logged In
-      return res.sendStatus(200);
-    })(req, res, next);
-  });
+		// Error 401: Invalid Credentials
+		if (!user) {return res.sendStatus(401);}
+
+		req.logIn(user, function (err) {
+			if (err) {return next(err);}
+			// Success 400: User Logged In
+			return res.sendStatus(200);
+		});
+	})(req, res, next);
+});
 
 
 /***** USER LOGOUT*****/
