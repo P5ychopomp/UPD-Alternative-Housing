@@ -20,9 +20,22 @@ import { useState } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Theme from "../../components/Theme";
+import { useFormik } from "formik";
 
 export default function LandlordRegister() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+      facebook: "",
+      phone: "",
+    },
+  });
 
   return (
     <ChakraProvider theme={Theme}>
@@ -47,24 +60,40 @@ export default function LandlordRegister() {
                 <Box minW={"50%"}>
                   <FormControl name="fname" id="firstName" isRequired>
                     <FormLabel>First Name</FormLabel>
-                    <Input type="text" />
+                    <Input
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.firstName}
+                    />
                   </FormControl>
                 </Box>
                 <Box minW={"50%"}>
                   <FormControl name="=lname" id="lastName" isRequired>
                     <FormLabel>Last Name</FormLabel>
-                    <Input type="text" />
+                    <Input
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.lastName}
+                    />
                   </FormControl>
                 </Box>
               </HStack>
               <FormControl name="email" id="email" isRequired>
                 <FormLabel>Email address</FormLabel>
-                <Input type="email" />
+                <Input
+                  type="email"
+                  onChange={formik.handleChange}
+                  value={formik.values.email}
+                />
               </FormControl>
               <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? "text" : "password"} />
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
+                  />
                   <InputRightElement width="3.5rem">
                     <Button
                       h="2rem"
@@ -91,7 +120,11 @@ export default function LandlordRegister() {
               <FormControl id="confirmPassword" isRequired>
                 <FormLabel>Confirm Password</FormLabel>
                 <InputGroup>
-                  <Input type={"password"} />
+                  <Input
+                    type={"password"}
+                    onChange={formik.handleChange}
+                    value={formik.values.confirm_password}
+                  />
                 </InputGroup>
               </FormControl>
             </Stack>
@@ -99,11 +132,19 @@ export default function LandlordRegister() {
               <Divider mt="7" mb="2" borderColor="gray.400" variant="dashed" />
               <FormControl id="facebook" isRequired>
                 <FormLabel>Facebook Profile</FormLabel>
-                <Input type="text" />
+                <Input
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.facebook}
+                />
               </FormControl>
               <FormControl name="phone" id="phone" isRequired>
                 <FormLabel>Phone Number</FormLabel>
-                <Input type="text" />
+                <Input
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.phone}
+                />
               </FormControl>
               <HStack spacing={10} pt={2} justifyContent="center">
                 <Button
