@@ -27,8 +27,8 @@ export const LandlordCreateProperty = () => {
  const navigate = useNavigate();
   useEffect(() => {
     Axios.get(`${fetchAuth}/checkAuth`).then((response) => {
-      console.log(response.data.message);
-      if (response.data.message === 'Unauthorized') {
+      console.log(response.data.isAuthenticated);
+      if (!response.data.isAuthenticated) {
         navigate("/");
       }
     })
