@@ -47,10 +47,12 @@ const LandlordLogin = () => {
           },
         }
       ).then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           navigate("/CreateProperty")
-        } else {
-          navigate("/LandlordRegistration")
+        }
+      }).catch((error) => {
+        if (error.response.satus === 404) {
+          console.log("Invalid Credentials")
         }
       });
   };
