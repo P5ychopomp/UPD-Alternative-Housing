@@ -91,7 +91,7 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-app.get('/api/check-authentication', (req, res) => {
+router.get('/api/check-authentication', (req, res) => {
   res.json({ isAuthenticated: req.isAuthenticated() });
 });
 
