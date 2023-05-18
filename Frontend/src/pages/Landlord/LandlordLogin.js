@@ -51,7 +51,7 @@ const LandlordLogin = () => {
           navigate("/CreateProperty")
         }
       }).catch((error) => {
-        if (error.response.satus === 401) {
+        if (error.response.status === 401) {
           console.log("Invalid Credentials")
         }
       });
