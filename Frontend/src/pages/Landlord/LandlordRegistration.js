@@ -17,44 +17,61 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Link as ReactLink } from "react-router-dom";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Theme from "../../components/Theme";
+import { fetchAuth } from "../../utils/FetchAuth";
+import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 export default function LandlordRegister() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
-      confirmPassword: "",
-      facebook: "",
-      phone: "",
+      passwordconfirm: "",
+/*       facebook: "",
+      phone: "", */
     },
     validationSchema: Yup.object({
-      firstName: Yup.string()
+      first_name: Yup.string()
         .max(40, "Must be 40 characters or less")
         .required("Required"),
-      lastName: Yup.string()
+      last_name: Yup.string()
         .max(25, "Must be 25 characters or less")
         .required("Required"),
-      email: Yup.string().max("Invalid email address").required("Required"),
-      password: Yup.string().max("Invalid email address").required("Required"),
-      confirmPassword: Yup.string()
-        .max("Invalid email address")
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().required("Required"),
+      passwordconfirm: Yup.string()
         .required("Required"),
-      facebook: Yup.string().max("Invalid email address").required("Required"),
-      phone: Yup.string().max("Invalid email address").required("Required"),
+      /* facebook: Yup.string().max("Invalid email address").required("Required"),
+      phone: Yup.string().max("Invalid email address").required("Required"), */
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
+      await Axios.post(`${fetchAuth}/register`, values, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            navigate("/CreateProperty");
+          }
+        })
+        .catch((error) => {
+            console.log(error.response);
+        });
     },
   });
+
+  console.log(formik.errors)
 
   return (
     <ChakraProvider theme={Theme}>
@@ -78,22 +95,22 @@ export default function LandlordRegister() {
               <Stack spacing={4}>
                 <HStack maxWidth={"100%"}>
                   <Box minW={"50%"}>
-                    <FormControl name="fname" id="firstName" isRequired>
+                    <FormControl name="fname" id="first_name" isRequired>
                       <FormLabel>First Name</FormLabel>
                       <Input
                         type="text"
                         onChange={formik.handleChange}
-                        value={formik.values.firstName}
+                        value={formik.values.first_name}
                       />
                     </FormControl>
                   </Box>
                   <Box minW={"50%"}>
-                    <FormControl name="=lname" id="lastName" isRequired>
+                    <FormControl name="=lname" id="last_name" isRequired>
                       <FormLabel>Last Name</FormLabel>
                       <Input
                         type="text"
                         onChange={formik.handleChange}
-                        value={formik.values.lastName}
+                        value={formik.values.last_name}
                       />
                     </FormControl>
                   </Box>
@@ -137,13 +154,13 @@ export default function LandlordRegister() {
                     1 special character and number.
                   </Text>
                 </FormControl>
-                <FormControl id="confirmPassword" isRequired>
+                <FormControl id="passwordconfirm" isRequired>
                   <FormLabel>Confirm Password</FormLabel>
                   <InputGroup>
                     <Input
                       type="password"
                       onChange={formik.handleChange}
-                      value={formik.values.confirmPassword}
+                      value={formik.values.passwordconfirm}
                     />
                   </InputGroup>
                 </FormControl>
