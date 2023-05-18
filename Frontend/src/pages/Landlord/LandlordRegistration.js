@@ -21,6 +21,7 @@ import { Link as ReactLink } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Theme from "../../components/Theme";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function LandlordRegister() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,8 +36,23 @@ export default function LandlordRegister() {
       facebook: "",
       phone: "",
     },
+    validationSchema: Yup.object({
+      firstName: Yup.string()
+        .max(40, "Must be 40 characters or less")
+        .required("Required"),
+      lastName: Yup.string()
+        .max(25, "Must be 25 characters or less")
+        .required("Required"),
+      email: Yup.string().max("Invalid email address").required("Required"),
+      password: Yup.string().max("Invalid email address").required("Required"),
+      confirmPassword: Yup.string()
+        .max("Invalid email address")
+        .required("Required"),
+      facebook: Yup.string().max("Invalid email address").required("Required"),
+      phone: Yup.string().max("Invalid email address").required("Required"),
+    }),
     onSubmit: (values) => {
-      console.log(values)
+      console.log(values);
     },
   });
 
