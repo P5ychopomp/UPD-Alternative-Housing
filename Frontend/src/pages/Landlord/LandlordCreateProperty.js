@@ -26,7 +26,7 @@ Axios.defaults.withCredentials = true;
 export const LandlordCreateProperty = () => {
  const navigate = useNavigate();
   useEffect(() => {
-    Axios.get(`${fetchAuth}/checkAuth`).then((response) => {
+    Axios.get(`${fetchAuth}/api/check-authentication`).then((response) => {
       console.log(response.data.isAuthenticated);
       if (!response.data.isAuthenticated) {
         navigate("/");
