@@ -16,24 +16,21 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import Theme from "../../components/Theme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
-import AxiosError from "axios";
 import { fetchAuth } from "../../utils/FetchAuth";
-import { useSignIn } from "react-auth-kit";
+import { useAuth } from "../../utils/Auth";
 
 const LandlordLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const signIn = useSignIn();
+  const auth = useAuth()
   Axios.defaults.withCredentials = true;
 
   const login = async () => {
-    setError("");
       await Axios.post(
         `${fetchAuth}/login`,
         {
@@ -48,6 +45,7 @@ const LandlordLogin = () => {
         }
       ).then((response) => {
         if (response.status === 200) {
+          console.log(response.session)
           navigate("/CreateProperty")
         }
       }).catch((error) => {

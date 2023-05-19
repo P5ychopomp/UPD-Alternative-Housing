@@ -20,35 +20,43 @@ import { LandlordCreateProperty } from "./pages/Landlord/LandlordCreateProperty"
 import Landing from "./pages/Landing";
 import Partners from "./pages/Partners";
 import { Help } from "./pages/Help";
+import { AuthProvider } from "./utils/Auth";
 
 const App = () => {
   return (
-    <ChakraProvider theme={Theme}>
-      <Container maxW='80%' minH='150vh'>
-      <Routes>
-        <Route element={<Navbar />}>
-          <Route index element={<Landing />} />
-          <Route path="/LandlordLogin" element={<LandlordLogin />} />
-          <Route path="/LandlordRegister" element={<LandlordRegistration />} />
-          <Route path="/Home" element={<Home />} />
-          <Route path="/AboutUs" element={<About />} />
-          <Route path="/Faqs" element={<Faqs />} />
-          <Route path="/:id" element={<Properties />} />
-          <Route path="/Partners" element={<Partners />} />
-          <Route path="/Help" element={<Help />} />
-          <Route path="/Terms" element={<TermsofService />} />
-          <Route path="/Privacy" element={<Privacy />} />
-          <Route path="/ContactUs" element={<ContactUs />} />
-          <Route path="/PostingGuides" element={<PostingGuides />} />
-          <Route path="/SearchGuides" element={<SearchGuides />} />
-          <Route path="/Safety" element={<Safety />} />
-        </Route>
-        <Route path="/CreateProperty" element={<LandlordCreateProperty />} />
-      </Routes>
-      </Container>
-      
-      <Footer />
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider theme={Theme}>
+        <Container maxW="80%" minH="150vh">
+          <Routes>
+            <Route element={<Navbar />}>
+              <Route index element={<Landing />} />
+              <Route path="/LandlordLogin" element={<LandlordLogin />} />
+              <Route
+                path="/LandlordRegister"
+                element={<LandlordRegistration />}
+              />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/AboutUs" element={<About />} />
+              <Route path="/Faqs" element={<Faqs />} />
+              <Route path="/:id" element={<Properties />} />
+              <Route path="/Partners" element={<Partners />} />
+              <Route path="/Help" element={<Help />} />
+              <Route path="/Terms" element={<TermsofService />} />
+              <Route path="/Privacy" element={<Privacy />} />
+              <Route path="/ContactUs" element={<ContactUs />} />
+              <Route path="/PostingGuides" element={<PostingGuides />} />
+              <Route path="/SearchGuides" element={<SearchGuides />} />
+              <Route path="/Safety" element={<Safety />} />
+            </Route>
+            <Route
+              path="/CreateProperty"
+              element={<LandlordCreateProperty />}
+            />
+          </Routes>
+        </Container>
+        <Footer />
+      </ChakraProvider>
+    </AuthProvider>
   );
 };
 
