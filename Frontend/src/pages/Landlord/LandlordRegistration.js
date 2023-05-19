@@ -25,7 +25,7 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function LandlordRegister() {
+export default function Register() {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 

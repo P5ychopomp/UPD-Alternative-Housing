@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Properties from "./pages/Properties";
@@ -13,14 +13,17 @@ import SearchGuides from "./pages/SearchGuides";
 import Home from "./pages/Home";
 import "./styles/App.css";
 import { ChakraProvider, Container } from "@chakra-ui/react";
-import LandlordRegistration from "./pages/Landlord/LandlordRegistration";
-import LandlordLogin from "./pages/Landlord/LandlordLogin";
+import Register from "./pages/Landlord/LandlordRegistration";
+import Login from "./pages/Landlord/LandlordLogin";
 import Theme from "./components/Theme";
-import { LandlordCreateProperty } from "./pages/Landlord/LandlordCreateProperty";
+import { CreateProperty } from "./pages/Landlord/LandlordCreateProperty";
 import Landing from "./pages/Landing";
 import Partners from "./pages/Partners";
 import { Help } from "./pages/Help";
 import { AuthProvider } from "./utils/Auth";
+import { RequireAuth } from "./utils/RequireAuth";
+import ListedProperties from "./pages/Landlord/ListedProperties";
+import SidebarWithHeader from "./components/Landlord/Sidebar";
 
 const App = () => {
   return (
@@ -30,10 +33,10 @@ const App = () => {
           <Routes>
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />
-              <Route path="/LandlordLogin" element={<LandlordLogin />} />
+              <Route path="/LandlordLogin" element={<Login />} />
               <Route
                 path="/LandlordRegister"
-                element={<LandlordRegistration />}
+                element={<Register />}
               />
               <Route path="/Home" element={<Home />} />
               <Route path="/AboutUs" element={<About />} />
@@ -48,10 +51,18 @@ const App = () => {
               <Route path="/SearchGuides" element={<SearchGuides />} />
               <Route path="/Safety" element={<Safety />} />
             </Route>
-            <Route
-              path="/CreateProperty"
-              element={<LandlordCreateProperty />}
-            />
+            <Route element={<RequireAuth />}>
+              <SidebarWithHeader>
+                <Route
+                  path="/Landlord/ListedProperties"
+                  element={<ListedProperties />}
+                />
+                <Route
+                  path="/Landlord/CreateProperty"
+                  element={<CreateProperty />}
+                />
+              </SidebarWithHeader>
+            </Route>
           </Routes>
         </Container>
         <Footer />

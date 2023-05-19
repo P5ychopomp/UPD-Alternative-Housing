@@ -1,16 +1,29 @@
+import { Axios } from "axios";
 import { createContext, useContext, useState } from "react";
+import { fetchAuth } from "./FetchAuth";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = (user) => {
-    setUser(user);
+  const login = async (user) => {
+    if (!user) {
+      await Axios.get(`${fetchAuth}/api/check-authentication`).then(
+        (response) => {
+          console.log(response.data.isAuthenticated);
+          setUser(response.data.isAuthenticated);
+        }
+      );
+    }
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    await Axios.post(`${fetchAuth}/logout`).then((response) => {
+      if (response.status === 200) {
+        setUser(null);
+      }
+    });
   };
 
   return (
@@ -21,5 +34,5 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-    return useContext(AuthContext)
-}
+  return useContext(AuthContext);
+};
