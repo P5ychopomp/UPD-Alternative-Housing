@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import SidebarWithHeader from "../../components/Landlord/Sidebar.js";
 import {
   Box,
-  Button,
   ChakraProvider,
   Container,
   Heading,
@@ -17,8 +15,6 @@ import {
 import Theme from "../../components/Theme.js";
 import { Icon } from "@iconify/react";
 import Axios from "axios";
-import { useAuth } from "../../utils/Auth.js";
-import { useNavigate } from "react-router";
 Axios.defaults.withCredentials = true;
 
 export const CreateProperty = () => {

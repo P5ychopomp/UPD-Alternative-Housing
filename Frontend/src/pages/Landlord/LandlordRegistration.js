@@ -24,9 +24,11 @@ import { fetchAuth } from "../../utils/FetchAuth";
 import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useAuth } from "../../utils/Auth";
 
 export default function Register() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const auth = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
@@ -36,7 +38,7 @@ export default function Register() {
       email: "",
       password: "",
       passwordconfirm: "",
-/*       facebook: "",
+      /*       facebook: "",
       phone: "", */
     },
     validationSchema: Yup.object({
@@ -48,8 +50,7 @@ export default function Register() {
         .required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
-      passwordconfirm: Yup.string()
-        .required("Required"),
+      passwordconfirm: Yup.string().required("Required"),
       /* facebook: Yup.string().max("Invalid email address").required("Required"),
       phone: Yup.string().max("Invalid email address").required("Required"), */
     }),
@@ -59,18 +60,35 @@ export default function Register() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       })
-        .then((response) => {
+        .then(async (response) => {
           if (response.status === 200) {
-            navigate("/Landlord/Login");
+            await Axios.post(
+              `${fetchAuth}/login`,
+              {
+                email: formik.values.email,
+                password: formik.values.password,
+              },
+              {
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+              }
+            ).then(async (response) => {
+              if (response.status === 200) {
+                await auth.login(false);
+                navigate("/Landlord/CreateProperty");
+              }
+            });
           }
         })
         .catch((error) => {
-            console.log(error.response);
+          console.log(error.response);
         });
     },
   });
 
-  console.log(formik.errors)
+  console.log(formik.errors);
 
   return (
     <ChakraProvider theme={Theme}>

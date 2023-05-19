@@ -5,7 +5,6 @@ import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import Listings from "../components/Listings";
 import Search from "../components/Search";
 import SearchFilters from "../components/SearchFilters";
-import NoData from "../components/NoData";
 import Theme from "../components/Theme";
 import { fetchBaseUrl } from "../utils/FetchBaseUrl";
 import "./styles/Home.css";
@@ -21,14 +20,12 @@ function Home() {
   const [sfVisible, setSfVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [totalpage, setTotalpage] = useState(20);
-  const [none, setNone] = useState(true);
 
   useEffect(() => {
     const getListings = () => {
       setIsLoading(true);
       axios.get(`${fetchBaseUrl}?${query}${searchFilters}`).then((res) => {
         const house = res.data;
-        if (house.data.length === 0) setNone(false);
         setTotalpage(house.data.length);
         setpageCount(Math.ceil(totalpage / 20));
         axios
