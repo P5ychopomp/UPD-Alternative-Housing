@@ -29,7 +29,7 @@ const App = () => {
   return (
     <AuthProvider>
       <ChakraProvider theme={Theme}>
-        <Container maxW="80%" minH="150vh">
+        <Container maxW="100%" minH="150vh" p='0'>
           <Routes>
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />

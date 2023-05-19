@@ -33,18 +33,10 @@ import {
 import { useAuth } from "../../utils/Auth";
 import { Outlet, useNavigate } from "react-router";
 
-const LinkItems = [
-  { name: "Home", icon: FiHome },
-  { name: "Listed Properties", icon: FiTrendingUp },
-  { name: "Delisted Properties", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
-];
-
 export default function SidebarWithHeader() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="200vh" bgColor="gray.100">
+    <Box minH="200vh" bgColor="gray.100" m='0'>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -72,6 +64,27 @@ export default function SidebarWithHeader() {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
+  const navigate = useNavigate();
+  const handleClick = (path) => {
+    navigate(path);
+  };
+
+  const LinkItems = [
+    { name: "Home", icon: FiHome, path: "/Home" },
+    {
+      name: "Listed Properties",
+      icon: FiTrendingUp,
+      path: "/Landlord/ListedProperties",
+    },
+    {
+      name: "Delisted Properties",
+      icon: FiCompass,
+      path: "/Landlord/ListedProperties",
+    },
+    { name: "Favourites", icon: FiStar, path: "/Landlord/ListedProperties" },
+    { name: "Settings", icon: FiSettings, path: "/Landlord/ListedProperties" },
+  ];
+
   return (
     <Box
       transition="3s ease"
@@ -83,19 +96,29 @@ const SidebarContent = ({ onClose, ...rest }) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" mb='10'>
+      <Flex
+        h="20"
+        alignItems="center"
+        mx="8"
+        justifyContent="space-between"
+        mb="10"
+      >
         <Image
           className="navbar-logo"
           src="../USC-Logo2.png"
           alt="USC Logo"
           height="3.5em"
-          ml='0'
+          ml="0"
         />
-        
+
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem
+          key={link.name}
+          icon={link.icon}
+          onClick={() => handleClick(link.path)}
+        >
           {link.name}
         </NavItem>
       ))}
@@ -208,7 +231,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem onClick={handleLogout} >Sign out</MenuItem>
+              <MenuItem onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

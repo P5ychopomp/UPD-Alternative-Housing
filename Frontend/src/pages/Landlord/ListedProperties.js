@@ -41,7 +41,7 @@ const ListedProperties = ({ property }) => {
                   <Image
                     boxSize="50px"
                     borderRadius="full"
-                    src={"landlord.png"}
+                    src="../landlord.png"
                     objectFit="cover"
                     alt="Landlord Profile Picture"
                   />{" "}
