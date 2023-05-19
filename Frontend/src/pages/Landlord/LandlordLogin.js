@@ -45,7 +45,7 @@ const LandlordLogin = () => {
         }
       ).then((response) => {
         if (response.status === 200) {
-          console.log(response.session)
+          console.log(response)
           navigate("/CreateProperty")
         }
       }).catch((error) => {
