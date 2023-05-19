@@ -34,10 +34,7 @@ const App = () => {
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />
               <Route path="/LandlordLogin" element={<Login />} />
-              <Route
-                path="/LandlordRegister"
-                element={<Register />}
-              />
+              <Route path="/LandlordRegister" element={<Register />} />
               <Route path="/Home" element={<Home />} />
               <Route path="/AboutUs" element={<About />} />
               <Route path="/Faqs" element={<Faqs />} />
@@ -52,7 +49,7 @@ const App = () => {
               <Route path="/Safety" element={<Safety />} />
             </Route>
             <Route element={<RequireAuth />}>
-              <SidebarWithHeader>
+              <Route element={<SidebarWithHeader />}>
                 <Route
                   path="/Landlord/ListedProperties"
                   element={<ListedProperties />}
@@ -61,7 +58,7 @@ const App = () => {
                   path="/Landlord/CreateProperty"
                   element={<CreateProperty />}
                 />
-              </SidebarWithHeader>
+              </Route>
             </Route>
           </Routes>
         </Container>
