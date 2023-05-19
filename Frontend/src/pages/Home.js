@@ -5,9 +5,11 @@ import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import Listings from "../components/Listings";
 import Search from "../components/Search";
 import SearchFilters from "../components/SearchFilters";
+import NoData from "../components/NoData";
 import Theme from "../components/Theme";
 import { fetchBaseUrl } from "../utils/FetchBaseUrl";
 import "./styles/Home.css";
+import axios from "axios";
 
 function Home() {
   const [query, setQuery] = useState("");
@@ -18,20 +20,30 @@ function Home() {
   const [searchFilters, setSearchFilters] = useState("");
   const [sfVisible, setSfVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalpage, setTotalpage] = useState(20);
+  const [none, setNone] = useState(true);
 
   useEffect(() => {
-    const getListings = async () => {
-      const res = await fetch(`${fetchBaseUrl}?page=${page+1}${query}${searchFilters}`);
-      const house = await res.json();
-      setIsLoading(false);
+    const getListings = () => {
+      setIsLoading(true);
+      axios.get(`${fetchBaseUrl}?${query}${searchFilters}`).then((res) => {
+        const house = res.data;
+        if (house.data.length === 0) setNone(false);
+        setTotalpage(house.data.length);
+        setpageCount(Math.ceil(totalpage / 20));
+        axios
+          .get(`${fetchBaseUrl}?page=${page + 1}&${query}${searchFilters}`)
+          .then((res) => {
+            setIsLoading(false);
+            const house = res.data;
+            setListings(house.data);
+          });
+      });
+
       //const total = res.headers.get("x-total-count");
-      const total = house.data[0].count;
-      console.log(house.data[0])
-      setpageCount(Math.ceil(total / 10));
-      setListings(house.data);
     };
     getListings();
-  }, [query, page, searchFilters]);
+  }, [query, page, searchFilters, totalpage, setTotalpage]);
 
   const handlePageClick = async (data) => {
     setPage(data.selected);
@@ -43,16 +55,18 @@ function Home() {
 
   return (
     <div>
-      <Container minW="100%">
+      <Container maxW="100%">
         <ChakraProvider theme={Theme}>
           <Search
             keywords={keywords}
             setKeywords={setKeywords}
-            query={query}
             setQuery={setQuery}
+            filters={searchFilters}
+            setFilters={setSearchFilters}
             sfVisible={sfVisible}
             setSfVisible={setSfVisible}
           />
+          {console.log(searchFilters)}
           {sfVisible && (
             <Container minWidth="90%" mt="-5">
               <SearchFilters
@@ -95,7 +109,9 @@ function Home() {
         ) : (
           <Container mt="20" centerContent>
             <Spinner color="gray.600" size="xl" />
-            <Text color="gray.600" fontWeight="bold" mt='5'>Fetching Listings...</Text>
+            <Text color="gray.600" fontWeight="bold" mt="5">
+              Fetching Listings...
+            </Text>
           </Container>
         )}
         <Container mt="5em" centerContent>

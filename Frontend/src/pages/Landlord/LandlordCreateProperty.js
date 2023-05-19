@@ -17,12 +17,36 @@ import {
 } from "@chakra-ui/react";
 import Theme from "../../components/Theme.js";
 import { Icon } from "@iconify/react";
+import Axios from "axios";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { fetchAuth } from "../../utils/FetchAuth.js";
+Axios.defaults.withCredentials = true;
 
 export const LandlordCreateProperty = () => {
+ const navigate = useNavigate();
+  useEffect(() => {
+    Axios.get(`${fetchAuth}/api/check-authentication`).then((response) => {
+      console.log(response.data.isAuthenticated);
+      if (!response.data.isAuthenticated) {
+        navigate("/");
+      }
+    })
+  }); 
   return <SidebarWithHeader children={<Content />} />;
 };
 
 const Content = () => {
+  const navigate = useNavigate();
+  const [loginStatus, setLoginStatus] = useState(false);
+  const logout = async () => {
+    await Axios.post(`${fetchAuth}/logout`).then((response) => {
+      if (response.status === 200) {
+        navigate("/")
+      }
+    })
+  };
+  
   const [name, setName] = useState(true);
   const [rate, setRate] = useState(0);
   const [lotArea, setlotArea] = useState([0, 0]);
@@ -246,6 +270,7 @@ const Content = () => {
             </SimpleGrid>
           </Container>
         </Box>
+        <Button onClick={logout}>Logout</Button>
       </Container>
     </ChakraProvider>
   );

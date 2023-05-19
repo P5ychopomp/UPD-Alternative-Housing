@@ -18,11 +18,13 @@ import LandlordLogin from "./pages/Landlord/LandlordLogin";
 import Theme from "./components/Theme";
 import { LandlordCreateProperty } from "./pages/Landlord/LandlordCreateProperty";
 import Landing from "./pages/Landing";
+import Partners from "./pages/Partners";
+import { Help } from "./pages/Help";
 
 const App = () => {
   return (
     <ChakraProvider theme={Theme}>
-      <Container maxW='100%' m='0' p='0' minH='150vh'>
+      <Container maxW='80%' minH='150vh'>
       <Routes>
         <Route element={<Navbar />}>
           <Route index element={<Landing />} />
@@ -32,6 +34,8 @@ const App = () => {
           <Route path="/AboutUs" element={<About />} />
           <Route path="/Faqs" element={<Faqs />} />
           <Route path="/:id" element={<Properties />} />
+          <Route path="/Partners" element={<Partners />} />
+          <Route path="/Help" element={<Help />} />
           <Route path="/Terms" element={<TermsofService />} />
           <Route path="/Privacy" element={<Privacy />} />
           <Route path="/ContactUs" element={<ContactUs />} />

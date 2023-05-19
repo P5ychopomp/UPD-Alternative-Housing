@@ -86,7 +86,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" mb='10'>
         <Image
           className="navbar-logo"
-          src="USC-logo2.png"
+          src="USC-Logo2.png"
           alt="USC Logo"
           height="3.5em"
           ml='0'

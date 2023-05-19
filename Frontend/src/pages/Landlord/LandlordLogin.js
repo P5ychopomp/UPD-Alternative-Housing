@@ -14,40 +14,48 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Link as ReactLink } from "react-router-dom";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import Theme from "../../components/Theme";
 import { useEffect, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
+import AxiosError from "axios";
+import { fetchAuth } from "../../utils/FetchAuth";
+import { useSignIn } from "react-auth-kit";
 
 const LandlordLogin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loginStatus, setLoginStatus] = useState(0);
+  const [error, setError] = useState("");
+  const signIn = useSignIn();
   Axios.defaults.withCredentials = true;
 
-  const login = () => {
-    console.log(email, password);
-    Axios.post("http://localhost:3001/login", {
-      email: email,
-      password: password,
-    }).then((response) => {
-      if (response.data.message === 100) {
-        setLoginStatus(response.data.message);
-      } else {
-        console.log(response.data.message);
-      }
-    });
+  const login = async () => {
+    setError("");
+      await Axios.post(
+        `${fetchAuth}/login`,
+        {
+          email: email,
+          password: password,
+        },
+        {
+          credentials: 'include',
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      ).then((response) => {
+        if (response.status === 200) {
+          navigate("/CreateProperty")
+        }
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          console.log("Invalid Credentials")
+        }
+      });
   };
-
-  useEffect(() => {
-    Axios.get("http://localhost:3001/login").then((response) => {
-      if (response.data.loggedIn === true) {
-        setLoginStatus(response.data.user[0].email);
-      }
-    });
-  }, []);
 
   return (
     <ChakraProvider theme={Theme}>
@@ -61,7 +69,7 @@ const LandlordLogin = () => {
           </Text>
         </Stack>
         <Stack>
-          <Heading mt='20' mb='2'fontSize={"4xl"} color="upd.700">
+          <Heading mt="20" mb="2" fontSize={"4xl"} color="upd.700">
             Login
           </Heading>
 
@@ -71,7 +79,6 @@ const LandlordLogin = () => {
             boxShadow="0px 0px 15px 1px #dbdbdb"
             padding="5"
             minW="60%"
-            
           >
             <Grid
               templateRows="repeat(7, 1fr)"
@@ -95,10 +102,13 @@ const LandlordLogin = () => {
               <GridItem colSpan={4} rowSpan={1}></GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-                <Input placeholder="Email" size="lg" 
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                          }}/>
+                <Input
+                  placeholder="Email"
+                  size="lg"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                />
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <InputGroup size="lg">
@@ -123,20 +133,19 @@ const LandlordLogin = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-              
-              <Button
-                  loadingText="Submitting"
-                  size="lg"
-                  bg={"upd.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "upd.700",
-                  }}
-                  onClick={login}
-                >
-                  Log in
-                </Button>
-                  
+                
+                  <Button
+                    loadingText="Submitting"
+                    size="lg"
+                    bg={"upd.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "upd.700",
+                    }}
+                    onClick={login}
+                  >
+                    Log in
+                  </Button>
                 
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
