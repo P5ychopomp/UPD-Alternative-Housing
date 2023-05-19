@@ -112,6 +112,7 @@ router.post("/login", function (req, res, next) {
 		req.logIn(user, function (err) {
 			if (err) {return next(err);}
 			// Success 400: User Logged In
+      console.log(req.session);
 			return res.sendStatus(200);
 		});
 	})(req, res, next);
