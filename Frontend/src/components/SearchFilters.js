@@ -5,7 +5,7 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderMark,
-  Tooltip, Box, Flex, Center, Container, Stack, Radio, RadioGroup, Button
+  Tooltip, Box, Flex, Center, Container, Stack, Checkbox, CheckboxGroup, Button
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
@@ -62,8 +62,10 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
   const handleFilterClick = () => {
     let filters1 = `&ratemin=${rate[0]}&ratemax=${rate[1]}&lotmin=${lotArea[0]}&lotmax=${lotArea[1]}`;
     for (const e of furnishType) filters1 += `&furnished=${e}`;
+    if (curfew.length !== 2)
     for (const e of curfew) filters1 += `&curfew=${e}`;
     for (const e of lotType) filters1 += `&type=${e}`;
+    if (occupy.length !== 2)
     for (const e of occupy) filters1 += `&occupancy=${e}`;
     for (const e of minStay) filters1 += `&stay=${e}`;
     for (const e of inclusion) filters1 += `&inclusions=${e}`;
@@ -188,25 +190,25 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
               <Text fontWeight='black' ml='-2' mt='2em' >
                 Furnishing
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setFurnishType(v) }} defaultValue={sh.sffurnishType} value={furnishType}
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => { setFurnishType(v) }} defaultValue={sh.sffurnishType} value={furnishType}
               >
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>None</Radio>
-                  <Radio value='1'>Semi</Radio>
-                  <Radio value='2'>Full</Radio>
+                  <Checkbox value='0'>None</Checkbox>
+                  <Checkbox value='1'>Semi</Checkbox>
+                  <Checkbox value='2'>Full</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
             <Box>
               <Text fontWeight='black' ml='-2' mt='1em' >
                 Curfew
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => setCurfew(v)} defaultValue={sh.sfcurfew} value={curfew}>
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => setCurfew(v)} defaultValue={sh.sfcurfew} value={curfew}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>None</Radio>
-                  <Radio value='1'>Has curfew</Radio>
+                  <Checkbox value='0'>None</Checkbox>
+                  <Checkbox value='1'>Has curfew</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
           </Container>
           {/* Lot Type */}
@@ -215,14 +217,14 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
               <Text fontWeight='black' ml='-2' mt='2em' >
                 Lot Type
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setlotType(v) }} defaultValue={sh.sflotType} value={lotType}>
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => { setlotType(v) }} defaultValue={sh.sflotType} value={lotType}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>Condominium</Radio>
-                  <Radio value='1'>Dormitory</Radio>
-                  <Radio value='2'>Apartment</Radio>
-                  <Radio value='3'>Boarding House</Radio>
+                  <Checkbox value='0'>Condominium</Checkbox>
+                  <Checkbox value='1'>Dormitory</Checkbox>
+                  <Checkbox value='2'>Apartment</Checkbox>
+                  <Checkbox value='3'>Boarding House</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
           </Container>
           {/* Occupancy and Minimum Stay */}
@@ -231,24 +233,24 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
               <Text fontWeight='black' ml='-2' mt='2em' >
                 Occupancy
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setOccupy(v) }} defaultValue={sh.sfoccupy} value={occupy}>
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => { setOccupy(v) }} defaultValue={sh.sfoccupy} value={occupy}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>Solo</Radio>
-                  <Radio value='1'>Shared</Radio>
+                  <Checkbox value='0'>Solo</Checkbox>
+                  <Checkbox value='1'>Shared</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
             <Box>
               <Text fontWeight='black' ml='-2' mt='2em' >
                 Minimum Stay
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setMinStay(v) }} defaultValue={sh.sfminStay} value={minStay}>
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => { setMinStay(v) }} defaultValue={sh.sfminStay} value={minStay}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>1 - 6 months</Radio>
-                  <Radio value='1'>7 - 12 months</Radio>
-                  <Radio value='2'>13 months or more</Radio>
+                  <Checkbox value='0'>1 - 6 months</Checkbox>
+                  <Checkbox value='1'>7 - 12 months</Checkbox>
+                  <Checkbox value='2'>13 months or more</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
           </Container>
           {/* Rent Inclusion and Amenities */}
@@ -258,15 +260,15 @@ const SearchFilters = ({ setKeywords, keywords, setQuery, setPage, filters, setF
                 Rent Inclusion <br />
                 and Amenities
               </Text >
-              <RadioGroup colorScheme='upd' size='sm' onChange={(v) => { setInclusion(v) }} defaultValue={sh.sfinclusion} value={inclusion}>
+              <CheckboxGroup colorScheme='upd' size='sm' onChange={(v) => { setInclusion(v) }} defaultValue={sh.sfinclusion} value={inclusion}>
                 <Stack ml='-2' mt='2' direction={['column']}>
-                  <Radio value='0'>Electricity</Radio>
-                  <Radio value='1'>Water</Radio>
-                  <Radio value='2'>Own Wifi</Radio>
-                  <Radio value='3'>Own Kitchen</Radio>
-                  <Radio value='4'>Parking</Radio>
+                  <Checkbox value='0'>Electricity</Checkbox>
+                  <Checkbox value='1'>Water</Checkbox>
+                  <Checkbox value='2'>Own Wifi</Checkbox>
+                  <Checkbox value='3'>Own Kitchen</Checkbox>
+                  <Checkbox value='4'>Parking</Checkbox>
                 </Stack>
-              </RadioGroup>
+              </CheckboxGroup>
             </Box>
           </Container>
         </Flex>
