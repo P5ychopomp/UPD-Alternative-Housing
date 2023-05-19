@@ -20,14 +20,12 @@ import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
 import { fetchAuth } from "../../utils/FetchAuth";
-import { useAuth } from "../../utils/Auth";
 
-const LandlordLogin = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const auth = useAuth()
   Axios.defaults.withCredentials = true;
 
   const login = async () => {
@@ -45,7 +43,6 @@ const LandlordLogin = () => {
         }
       ).then((response) => {
         if (response.status === 200) {
-          console.log(response)
           navigate("/CreateProperty")
         }
       }).catch((error) => {
@@ -164,4 +161,4 @@ const LandlordLogin = () => {
   );
 };
 
-export default LandlordLogin;
+export default Login;
