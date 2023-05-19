@@ -1,1 +1,0 @@
-export const fetchAuth = `https://upd-alternative-housing-api.onrender.com`
