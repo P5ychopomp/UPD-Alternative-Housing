@@ -1,0 +1,16 @@
+.dropdown:active {
+    transition: all 1s ease;
+  }
+  
+  .dropdown-menu {
+    background-color: #fff;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    text-align: center;
+    top: 0;
+    z-index: -99999;
+  }
