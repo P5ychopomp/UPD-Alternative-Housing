@@ -15,6 +15,7 @@ import {
   Link,
   ChakraProvider,
   Divider,
+  Spacer,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
@@ -93,13 +94,19 @@ export default function Register() {
   return (
     <ChakraProvider theme={Theme}>
       <form onSubmit={formik.handleSubmit}>
-        <Flex mt="10" align={"center"} justify={"center"}>
-          <Stack spacing={8} mx={"auto"} minW={"50%"} py={12} px={6}>
+        <Flex mt="10" align={"center"} mb="10">
+          <Stack
+            spacing={8}
+            mx={"auto"}
+            py={12}
+            px={6}
+            minW={["100%", "100%", "45em", "55em", "55em"]}
+          >
             <Stack align={"center"}>
               <Heading fontSize={"4xl"} textAlign={"center"} color="upd.700">
                 Registration
               </Heading>
-              <Text fontSize={"lg"} color={"gray.600"}>
+              <Text fontSize={"lg"} textAlign={"center"} color={"gray.600"}>
                 Rent your place with just a few requirements 👌
               </Text>
             </Stack>
@@ -110,8 +117,8 @@ export default function Register() {
               p={8}
             >
               <Stack spacing={4}>
-                <HStack maxWidth={"100%"}>
-                  <Box minW={"50%"}>
+                <Flex maxWidth={"100%"} flexWrap="wrap">
+                  <Box minW={["100%", "100%", "49%"]}>
                     <FormControl name="fname" id="first_name" isRequired>
                       <FormLabel>First Name</FormLabel>
                       <Input
@@ -121,7 +128,8 @@ export default function Register() {
                       />
                     </FormControl>
                   </Box>
-                  <Box minW={"50%"}>
+                  <Spacer />
+                  <Box minW={["100%", "100%", "49%"]}>
                     <FormControl name="=lname" id="last_name" isRequired>
                       <FormLabel>Last Name</FormLabel>
                       <Input
@@ -131,7 +139,7 @@ export default function Register() {
                       />
                     </FormControl>
                   </Box>
-                </HStack>
+                </Flex>
                 <FormControl name="email" id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
                   <Input

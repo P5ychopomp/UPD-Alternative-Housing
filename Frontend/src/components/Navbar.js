@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Image } from "@chakra-ui/react";
 import "./styles/Navbar.css";
+import Footer from "./Footer";
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -50,6 +51,7 @@ function Navbar() {
         </div>
       </nav>
       <Outlet />
+      <Footer />
     </>
   );
 }

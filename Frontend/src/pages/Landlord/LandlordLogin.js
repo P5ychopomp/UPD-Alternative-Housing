@@ -31,33 +31,35 @@ const Login = () => {
   Axios.defaults.withCredentials = true;
 
   const login = async () => {
-      await Axios.post(
-        `${fetchAuth}/login`,
-        {
-          email: email,
-          password: password,
+    await Axios.post(
+      `${fetchAuth}/login`,
+      {
+        email: email,
+        password: password,
+      },
+      {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        {
-          credentials: 'include',
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      ).then(async (response) => {
+      }
+    )
+      .then(async (response) => {
         if (response.status === 200) {
-          await auth.login(false)
-          navigate("/Landlord/CreateProperty")
+          await auth.login(false);
+          navigate("/Landlord/CreateProperty");
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         if (error.response.status === 401) {
-          console.log("Invalid Credentials")
+          console.log("Invalid Credentials");
         }
       });
   };
 
   return (
     <ChakraProvider theme={Theme}>
-      <Container mt="100" minW="100%" alignItems="center" centerContent>
+      <Container mt="100" maxW='100%' align={"center"} mb="10">
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"} color="upd.700">
             Welcome Landlord and Landladies!
@@ -66,7 +68,7 @@ const Login = () => {
             Help an Isko/Iska by listing your space on our website today. 🏠
           </Text>
         </Stack>
-        <Stack>
+        <Stack maxW={['100%', '100%', '50em', '50em', '50em']} >
           <Heading mt="20" mb="2" fontSize={"4xl"} color="upd.700">
             Login
           </Heading>
@@ -131,25 +133,27 @@ const Login = () => {
               </GridItem>
 
               <GridItem colSpan={4} rowSpan={1}>
-                
-                  <Button
-                    loadingText="Submitting"
-                    size="lg"
-                    bg={"upd.400"}
-                    color={"white"}
-                    _hover={{
-                      bg: "upd.700",
-                    }}
-                    onClick={login}
-                  >
-                    Log in
-                  </Button>
-                
+                <Button
+                  loadingText="Submitting"
+                  size="lg"
+                  bg={"upd.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "upd.700",
+                  }}
+                  onClick={login}
+                >
+                  Log in
+                </Button>
               </GridItem>
               <GridItem colSpan={4} rowSpan={1}>
                 <Text>
                   Don't have an account?{" "}
-                  <Link as={ReactLink} to="/Landlord/Register" color={"upd.400"}>
+                  <Link
+                    as={ReactLink}
+                    to="/Landlord/Register"
+                    color={"upd.400"}
+                  >
                     Sign up
                   </Link>
                 </Text>

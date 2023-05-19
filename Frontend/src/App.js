@@ -29,7 +29,7 @@ const App = () => {
   return (
     <AuthProvider>
       <ChakraProvider theme={Theme}>
-        <Container maxW="100%" minH="150vh" p='0'>
+        <Container maxW="100%" minH="100vh" p="0" display='flex' flexDirection='column'>
           <Routes>
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />
@@ -48,21 +48,15 @@ const App = () => {
               <Route path="/SearchGuides" element={<SearchGuides />} />
               <Route path="/Safety" element={<Safety />} />
             </Route>
+
             <Route element={<RequireAuth />}>
-              <Route path='/Landlord' element={<SidebarWithHeader />}>
-                <Route
-                  path="ListedProperties"
-                  element={<ListedProperties />}
-                />
-                <Route
-                  path="CreateProperty"
-                  element={<CreateProperty />}
-                />
+              <Route path="/Landlord" element={<SidebarWithHeader />}>
+                <Route path="ListedProperties" element={<ListedProperties />} />
+                <Route path="CreateProperty" element={<CreateProperty />} />
               </Route>
             </Route>
           </Routes>
         </Container>
-        <Footer />
       </ChakraProvider>
     </AuthProvider>
   );
