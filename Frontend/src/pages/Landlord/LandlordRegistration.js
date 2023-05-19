@@ -54,7 +54,6 @@ export default function Register() {
       phone: Yup.string().max("Invalid email address").required("Required"), */
     }),
     onSubmit: async (values) => {
-      console.log(values);
       await Axios.post(`${fetchAuth}/register`, values, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -62,7 +61,7 @@ export default function Register() {
       })
         .then((response) => {
           if (response.status === 200) {
-            navigate("/LandlordLogin");
+            navigate("/Landlord/Login");
           }
         })
         .catch((error) => {
@@ -205,7 +204,7 @@ export default function Register() {
                 <Stack pt={6}>
                   <Text align={"center"}>
                     Already a user?{" "}
-                    <Link as={ReactLink} to="/LandlordLogin" color={"upd.400"}>
+                    <Link as={ReactLink} to="/Landlord/Login" color={"upd.400"}>
                       Login
                     </Link>
                   </Text>

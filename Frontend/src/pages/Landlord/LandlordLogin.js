@@ -20,9 +20,11 @@ import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import Axios from "axios";
 import { fetchAuth } from "../../utils/FetchAuth";
+import { useAuth } from "../../utils/Auth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,9 +43,10 @@ const Login = () => {
             "Content-Type": "application/x-www-form-urlencoded",
           },
         }
-      ).then((response) => {
+      ).then(async (response) => {
         if (response.status === 200) {
-          navigate("/CreateProperty")
+          await auth.login(false)
+          navigate("/Landlord/CreateProperty")
         }
       }).catch((error) => {
         if (error.response.status === 401) {
@@ -89,7 +92,7 @@ const Login = () => {
                   boxSize="300px"
                   objectFit="cover"
                   borderRadius="lg"
-                  src="landlord-image-1.png"
+                  src="../landlord-image-1.png"
                   alt="Landlord Icon"
                 />
               </GridItem>
@@ -146,7 +149,7 @@ const Login = () => {
               <GridItem colSpan={4} rowSpan={1}>
                 <Text>
                   Don't have an account?{" "}
-                  <Link as={ReactLink} to="/LandlordRegister" color={"upd.400"}>
+                  <Link as={ReactLink} to="/Landlord/Register" color={"upd.400"}>
                     Sign up
                   </Link>
                 </Text>

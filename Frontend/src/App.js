@@ -33,8 +33,8 @@ const App = () => {
           <Routes>
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />
-              <Route path="/LandlordLogin" element={<Login />} />
-              <Route path="/LandlordRegister" element={<Register />} />
+              <Route path="/Landlord/Login" element={<Login />} />
+              <Route path="/Landlord/Register" element={<Register />} />
               <Route path="/Home" element={<Home />} />
               <Route path="/AboutUs" element={<About />} />
               <Route path="/Faqs" element={<Faqs />} />
@@ -49,13 +49,13 @@ const App = () => {
               <Route path="/Safety" element={<Safety />} />
             </Route>
             <Route element={<RequireAuth />}>
-              <Route element={<SidebarWithHeader />}>
+              <Route path='/Landlord' element={<SidebarWithHeader />}>
                 <Route
-                  path="/Landlord/ListedProperties"
+                  path="ListedProperties"
                   element={<ListedProperties />}
                 />
                 <Route
-                  path="/Landlord/CreateProperty"
+                  path="CreateProperty"
                   element={<CreateProperty />}
                 />
               </Route>

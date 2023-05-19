@@ -70,7 +70,7 @@ const Landing = () => {
               </CardBody>
             </Card>
           </Link>
-          <Link to="/LandlordLogin" variant="unstyled">
+          <Link to="/Landlord/Login" variant="unstyled">
             <Card
               maxW="sm"
               boxShadow="0px 0px 5px 1px #dbdbdb"

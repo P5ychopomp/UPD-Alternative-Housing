@@ -1,4 +1,3 @@
-import React, { ReactNode } from "react";
 import {
   IconButton,
   Avatar,
@@ -19,7 +18,6 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  Heading,
   Image,
 } from "@chakra-ui/react";
 import {
@@ -33,7 +31,7 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 import { useAuth } from "../../utils/Auth";
-import { useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 
 const LinkItems = [
   { name: "Home", icon: FiHome },
@@ -43,7 +41,7 @@ const LinkItems = [
   { name: "Settings", icon: FiSettings },
 ];
 
-export default function SidebarWithHeader({ children }) {
+export default function SidebarWithHeader() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="200vh" bgColor="gray.100">
@@ -67,7 +65,7 @@ export default function SidebarWithHeader({ children }) {
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 64 }} p="4">
-        {children}
+        <Outlet />
       </Box>
     </Box>
   );
@@ -88,7 +86,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" mb='10'>
         <Image
           className="navbar-logo"
-          src="USC-Logo2.png"
+          src="../USC-Logo2.png"
           alt="USC Logo"
           height="3.5em"
           ml='0'

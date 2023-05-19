@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import Axios from "axios";
 import { createContext, useContext, useState } from "react";
 import { fetchAuth } from "./FetchAuth";
 
@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
     if (!user) {
       await Axios.get(`${fetchAuth}/api/check-authentication`).then(
         (response) => {
-          console.log(response.data.isAuthenticated);
           setUser(response.data.isAuthenticated);
         }
       );
