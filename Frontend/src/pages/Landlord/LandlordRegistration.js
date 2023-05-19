@@ -62,7 +62,7 @@ export default function LandlordRegister() {
       })
         .then((response) => {
           if (response.status === 200) {
-            navigate("/CreateProperty");
+            navigate("/Login");
           }
         })
         .catch((error) => {
