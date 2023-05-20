@@ -7,16 +7,6 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-<<<<<<< Updated upstream
-  const login = async (user) => {
-    if (!user) {
-      await Axios.get(`${fetchAuth}/api/check-authentication`).then(
-        (response) => {
-          setUser(response.data.isAuthenticated);
-        }
-      );
-    }
-=======
   const login = async () => {
     await Axios.get(`${fetchAuth}/api/check-authentication`).then(
       (response) => {
@@ -24,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.isAuthenticated);
       }
     );
->>>>>>> Stashed changes
   };
 
   const logout = async () => {
