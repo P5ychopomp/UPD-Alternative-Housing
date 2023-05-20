@@ -1,8 +1,19 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "./Auth";
+import Axios from "axios";
+import { fetchAuth } from "./FetchAuth";
+import { useEffect, useState } from "react";
 
 export const RequireAuth = () => {
   const auth = useAuth();
+  const [user, setUser] = useState(null);
 
-  return auth.user ? <Outlet /> : <Navigate to ='/Landlord/Login' />  
+  useEffect(() => {
+    Axios.get(`${fetchAuth}/api/check-authentication`).then((response) => {
+      console.log(response.data.isAuthenticated);
+      setUser(response.data.isAuthenticated);
+    });
+  }, [user, setUser]);
+
+  return auth.user ? <Outlet /> : <Navigate to="/Landlord/Login" />;
 };
