@@ -5,13 +5,13 @@ import { fetchAuth } from "./FetchAuth";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(localStorage.getItem("key"));
 
   const login = async () => {
     await Axios.get(`${fetchAuth}/api/check-authentication`).then(
       (response) => {
-        console.log(response.data.isAuthenticated);
         setUser(response.data.isAuthenticated);
+        localStorage.setItem("key", response.data.isAuthenticated);
       }
     );
   };
@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await Axios.post(`${fetchAuth}/logout`).then((response) => {
       if (response.status === 200) {
-        console.log(response.data.isAuthenticated);
         setUser(response.data.isAuthenticated);
+        localStorage.setItem("key", response.data.isAuthenticated);
       }
     });
   };
