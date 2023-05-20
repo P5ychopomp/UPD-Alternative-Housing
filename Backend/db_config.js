@@ -48,4 +48,4 @@ const sessionOptions = {
 const pool = mysql.createPool(options);
 const sessionStore = new MySQLStore(sessionOptions);
 
-module.exports = {pool, sessionStore};
+module.exports = {pool, sessionStore, sessionOptions};
