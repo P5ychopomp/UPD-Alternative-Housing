@@ -4,6 +4,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3030;
 const pool = require("./db_config").pool;
 const session = require("express-session");
+const cookieParser = require('cookie-parser');
 const bcrypt = require("bcrypt");
 var ensureLogIn = require("connect-ensure-login").ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
@@ -22,7 +23,7 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cookieParser());
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
 var sess = {
