@@ -41,7 +41,7 @@ var sess = {
     httpOnly: true,
     sameSite: "none",
     secure: true,
-    expires: new Date(Date.now() + expiration)
+    expires: new Date(Date.now() + expiration),
     maxAge: expiration
   },
 };
