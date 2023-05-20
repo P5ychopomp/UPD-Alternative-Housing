@@ -15,5 +15,5 @@ export const RequireAuth = () => {
     });
   }, [user, setUser]);
 
-  return auth.user ? <Outlet /> : <Navigate to="/Landlord/Login" />;
+  return (user || auth.user) ? <Outlet /> : <Navigate to="/Landlord/Login" />;
 };
