@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
-const expiration = require("./db_config").expiration;
+const expiration = require("./db_config").sessionOptions.expiration;
 
 var sess = {
   // Key we want to keep secret which will encrypt all of our information
