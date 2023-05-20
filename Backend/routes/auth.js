@@ -9,10 +9,10 @@ var pool = require("../db_config").pool;
 var router = express.Router();
 
 /**** USER REGISTRATION ****/
-router.get("/registration", (req, res) => {
+/* router.get("/registration", (req, res) => {
   //Backend Testing
   res.sendFile("temp_registration.html", { root: __dirname });
-});
+}); */
 
 router.post("/register", async (req, res) => {
   let { first_name, last_name, email, password, passwordconfirm } = req.body;
@@ -32,12 +32,10 @@ router.post("/register", async (req, res) => {
   // TODO: Implement better handling of invalid form
   if (!first_name || !last_name || !email || !password || !passwordconfirm) {
     errors.push({ message: "Please enter all fields" });
-    res.redirect("/registration");
   }
 
   if (password !== passwordconfirm) {
     errors.push({ message: "Passwords do not match" });
-    res.redirect("/registration");
   }
 
   // Password must be atleast 6 characters with one digit and special character
@@ -46,12 +44,15 @@ router.post("/register", async (req, res) => {
   );
 
   if (!strongPassword.test(password)) {
-    // Error 201: Weak Password
-    res.send({ message: "Your password is too weak. Please choose a stronger password." });
+    // Error: Weak Password
+    errors.push({
+      message: "Your password is too weak. Please choose a stronger password.",
+    });
   }
 
   if (errors.length > 0) {
     console.log(errors);
+    res.status(401).send(errors);
   } else {
     hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
@@ -91,33 +92,38 @@ router.post("/register", async (req, res) => {
 });
 
 /**** USER LOGIN ****/
-router.get('/api/check-authentication', (req, res) => {
+router.get("/api/check-authentication", (req, res) => {
   res.json({ isAuthenticated: req.isAuthenticated() });
 });
 
 // Login page for backend testing
-router.get("/login_page", (req, res) => {
+/* router.get("/login_page", (req, res) => {
   // results page
   res.sendFile("temp_login.html", { root: __dirname });
-});
+}); */
 
 router.post("/login", function (req, res, next) {
-	passport.authenticate("local", function (err, user, info) {
-		console.log("Authenticating...");
-		if (err) {return next(err);}
+  passport.authenticate("local", function (err, user, info) {
+    console.log("Authenticating...");
+    if (err) {
+      return next(err);
+    }
 
-		// Error 401: Invalid Credentials
-		if (!user) {return res.sendStatus(401);}
+    // Error 401: Invalid Credentials
+    if (!user) {
+      return res.sendStatus(401);
+    }
 
-		req.logIn(user, function (err) {
-			if (err) {return next(err);}
-			// Success 400: User Logged In
+    req.logIn(user, function (err) {
+      if (err) {
+        return next(err);
+      }
+      // Success 400: User Logged In
       console.log(req.session);
-			return res.sendStatus(200);
-		});
-	})(req, res, next);
+      return res.sendStatus(200);
+    });
+  })(req, res, next);
 });
-
 
 /***** USER LOGOUT*****/
 router.post("/logout", function (req, res, next) {

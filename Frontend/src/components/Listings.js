@@ -12,7 +12,7 @@ const Listings = ({ properties }) => {
                     {properties.map((property) => (
                         <div key={property.property_id} >
                             <Link to={{
-                                pathname: `/${property.property_id}`,
+                                pathname: `/Property${property.property_id}`,
                             }
                             } target="_blank">
                                 <Card property={property} />
