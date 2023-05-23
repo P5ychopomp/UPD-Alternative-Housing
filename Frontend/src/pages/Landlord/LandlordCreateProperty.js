@@ -28,8 +28,9 @@ export const CreateProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
+      lid:"",
       pname: "",
-      add: "",
+      sadd: "",
       brgy: "",
       city: "",
       area: "",
@@ -40,15 +41,17 @@ export const CreateProperty = () => {
       minstay: "",
       occupancy: "",
       curfew: "",
-      inclusion: [],
+      inclusion: "",
       other: "",
-      //img: "",
+      img: "",
+      date: new Date(),
+      
     },
     validationSchema: Yup.object({
       pname: Yup.string()
         .max(20, "Must be 40 characters or less")
         .required("Required"),
-      add: Yup.string()
+      sadd: Yup.string()
         .max(40, "Must be 25 characters or less")
         .required("Required"),
       city: Yup.string()
@@ -72,7 +75,6 @@ export const CreateProperty = () => {
       occupancy: Yup.number().required("Required"),
       furnishing: Yup.number().required("Required"),
       curfew: Yup.number().required("Required"),
-      inclusion: Yup.number().required("Required"),
       other: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
@@ -149,13 +151,13 @@ export const CreateProperty = () => {
                 <Stack>
                   <Box pb="5">
                     <Heading fontSize="25">Address</Heading>
-                    <FormControl id="add">
+                    <FormControl id="sadd">
                       <Input
                         placeholder="Unit No., Street Address., etc."
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
                         onChange={formik.handleChange}
-                        value={formik.values.add}
+                        value={formik.values.sadd}
                       />
                     </FormControl>
                     <FormControl id="brgy">
@@ -325,22 +327,22 @@ export const CreateProperty = () => {
                     <Heading fontSize="25" mb="3">
                       Rent Inclusion and Amenities
                     </Heading>
-                    <FormControl name="inclusion">
+                    <FormControl>
                       <CheckboxGroup pl="3" colorScheme="upd">
                         <Stack ml="1" mt="2" direction={["column"]}>
-                          <Checkbox value="0" onChange={formik.handleChange}>
+                          <Checkbox value="0" name="inclusion" onChange={formik.handleChange}>
                             Electricity
                           </Checkbox>
-                          <Checkbox value="1" onChange={formik.handleChange}>
+                          <Checkbox value="1" name="inclusion" onChange={formik.handleChange}>
                             Water
                           </Checkbox>
-                          <Checkbox value="2" onChange={formik.handleChange}>
+                          <Checkbox value="2" name="inclusion" onChange={formik.handleChange}>
                             Own Wifi
                           </Checkbox>
-                          <Checkbox value="3" onChange={formik.handleChange}>
+                          <Checkbox value="3" name="inclusion" onChange={formik.handleChange}>
                             Own Kitchen Area
                           </Checkbox>
-                          <Checkbox value="4" onChange={formik.handleChange}>
+                          <Checkbox value="4" name="inclusion" onChange={formik.handleChange}>
                             Parking Area
                           </Checkbox>
                         </Stack>
