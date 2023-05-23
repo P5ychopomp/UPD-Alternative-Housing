@@ -8,20 +8,25 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 var ensureLogIn = require("connect-ensure-login").ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
-var passport = require('passport');
+var passport = require("passport");
 
 const initializePassport = require("./routes/passport_config");
 
-initializePassport(passport); 
+initializePassport(passport);
 
 var cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: ["https://upd-alternative-housing.vercel.app", "http://localhost:3000", "https://upd-alternative-housing.netlify.app"],
+    origin: [
+      "https://upd-alternative-housing.vercel.app",
+      "http://localhost:3000",
+      "https://upd-alternative-housing.netlify.app",
+    ],
     optionsSuccessStatus: 200,
   })
 );
+
 app.use(express.urlencoded({ extended: false }));
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
@@ -41,7 +46,7 @@ var sess = {
     sameSite: "none",
     secure: true,
     expires: new Date(Date.now() + expiration),
-    maxAge: expiration
+    maxAge: expiration,
   },
 };
 app.use(session(sess));
@@ -224,6 +229,4 @@ function queryDB(req, res, next){
   next();
 }
 
-app.listen(PORT, () => {
-  console.log(`server started on port ${PORT}`);
-});
+app.listen(3001);
