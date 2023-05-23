@@ -118,6 +118,7 @@ app.put("/api/listing/update/:pid", ensureLoggedIn, bodyParser, updateProperty, 
 })
 
 app.post("/api/listing/create", ensureLoggedIn, bodyParser, createProperty, queryDB, (req,res)=>{ // should be POST
+  console.log(req.body)
   pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
       if (err) throw err;
       res.json({data})
@@ -229,4 +230,6 @@ function queryDB(req, res, next){
   next();
 }
 
-app.listen(3001);
+app.listen(3001, () => {
+  console.log('Server is running and listening on port 3001');
+});
