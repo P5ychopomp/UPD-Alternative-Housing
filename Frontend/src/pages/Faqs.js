@@ -1,13 +1,14 @@
-import { Box, Container } from '@chakra-ui/react'
-import React from 'react'
+import { Box, ChakraProvider, Container } from '@chakra-ui/react'
 
 const Faqs = () => {
   return (
-    <Container mt='60' alignItems='center' centerContent>
-      <Box mb='50'>
-        <h1>Faqs</h1>
+    <ChakraProvider>
+      <Container mt='20' alignItems='center' centerContent>
+      <Box mb='50' fontSize='28' fontWeight='bold' alignItems='center' >
+        <h1>FAQs</h1>
       </Box>
     </Container>
+    </ChakraProvider>
   )
 }
 
