@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser").json();
+const bodyParse = require("body-parser");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 3030;
@@ -9,6 +10,7 @@ const bcrypt = require("bcrypt");
 var ensureLogIn = require("connect-ensure-login").ensureLoggedIn;
 var ensureLoggedIn = ensureLogIn();
 var passport = require("passport");
+var cookieParser = require("cookie-parser")
 
 const initializePassport = require("./routes/passport_config");
 
@@ -19,7 +21,6 @@ app.use(
   cors({
     credentials: true,
     origin: [
-      "https://upd-alternative-housing.vercel.app",
       "http://localhost:3000",
       "https://upd-alternative-housing.netlify.app",
     ],
@@ -28,7 +29,7 @@ app.use(
 );
 
 app.use(cookieParser())
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParse.urlencoded({ extended: true }));
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
 const expiration = require("./db_config").sessionOptions.expiration;
@@ -249,7 +250,6 @@ const {
   UpdateAccountQuery,
   DeleteAccountQuery,
 } = require("./routes/accountQuery");
-const cookieParser = require("cookie-parser");
 
 // MIDDLEWARE
 
