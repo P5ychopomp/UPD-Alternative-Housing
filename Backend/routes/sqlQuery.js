@@ -7,6 +7,7 @@ class queryField{
     }
 
     getValue(){
+        console.log(this.filter, this.value)
         return this.value;
     }
 
@@ -47,7 +48,7 @@ class SQLQuery{
 
     noSpecialCharacters(data){  // input validation: allowlisting, placeholders, illegal characters
         let c='';
-        if(c = data.match(/[`'/\*%;\+\|\<\>=!\.\-]/)){ // special characters to avoid
+        if(c = data.match(/[`'/\*%;\+\|\<\>=!]/)){ // special characters to avoid
             console.log(`Illegal character found: ${c} in ${data}`)
             return 0;
         }
