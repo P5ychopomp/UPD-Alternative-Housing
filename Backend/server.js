@@ -29,7 +29,7 @@ app.use(
 );
 
 app.use(cookieParser)
-app.use(bodyParse.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
 const expiration = require("./db_config").sessionOptions.expiration;
