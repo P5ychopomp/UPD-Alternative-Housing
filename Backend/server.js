@@ -28,7 +28,7 @@ app.use(
   })
 );
 
-app.use(cookieParser())
+app.use(cookieParser)
 app.use(bodyParse.urlencoded({ extended: true }));
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
