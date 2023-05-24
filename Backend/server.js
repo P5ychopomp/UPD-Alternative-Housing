@@ -27,7 +27,8 @@ app.use(
   })
 );
 
-app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }));
 // Session Storage
 const sessionStore = require("./db_config").sessionStore;
 const expiration = require("./db_config").sessionOptions.expiration;
@@ -41,13 +42,13 @@ var sess = {
   saveUninitialized: true,
   // Use the mysql session store
   store: sessionStore,
-  /*   cookie: {
+    cookie: {
     httpOnly: true,
     sameSite: "none",
     secure: true,
     expires: new Date(Date.now() + expiration),
     maxAge: expiration,
-  }, */
+  },
 };
 app.use(session(sess));
 app.use(passport.initialize());
@@ -249,6 +250,7 @@ const {
   UpdateAccountQuery,
   DeleteAccountQuery,
 } = require("./routes/accountQuery");
+const cookieParser = require("cookie-parser");
 
 // MIDDLEWARE
 
