@@ -28,7 +28,6 @@ export const CreateProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
-      lid:"",
       pname: "",
       sadd: "",
       brgy: "",
@@ -41,11 +40,13 @@ export const CreateProperty = () => {
       minstay: "",
       occupancy: "",
       curfew: "",
-      inclusion: "",
       other: "",
       img: "",
-      date: new Date(),
-      
+      furnishing: null,
+      date: new Date(
+        new Date().toLocaleString("en", { timeZone: "Asia/Manila" })
+      ),
+      inclusion: [],
     },
     validationSchema: Yup.object({
       pname: Yup.string()
@@ -73,17 +74,21 @@ export const CreateProperty = () => {
         .integer()
         .positive("Input must be a positive integer"),
       occupancy: Yup.number().required("Required"),
-      furnishing: Yup.number().required("Required"),
+      furnishing: Yup.string().required("Required"),
       curfew: Yup.number().required("Required"),
-      other: Yup.string().required("Required"),
+      other: Yup.string(),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
-      await Axios.post(`${fetchAuth}/api/listing/create`, values, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
+      await Axios.post(
+        `${fetchAuth}/api/listing/create`,
+        JSON.stringify(values),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((response) => {
           console.log(response.data);
         })
@@ -98,6 +103,19 @@ export const CreateProperty = () => {
 
   console.log(formik.errors);
   console.log(formik.values);
+
+  const preventChangeInput = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current     function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
 
   return (
     <ChakraProvider theme={Theme}>
@@ -183,6 +201,9 @@ export const CreateProperty = () => {
                     <Heading fontSize="25">Rate</Heading>
                     <FormControl id="rate">
                       <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
                         placeholder="Amount in Peso (₱)"
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
@@ -195,6 +216,9 @@ export const CreateProperty = () => {
                     <Heading fontSize="25">Lot Area</Heading>
                     <FormControl id="area">
                       <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
                         placeholder="Size in square meters (sq. m)"
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
@@ -215,39 +239,36 @@ export const CreateProperty = () => {
                         value={formik.values.type}
                       >
                         <Stack ml="-2" mt="2" direction={["column"]}>
-                          <Radio value="0">Condominium</Radio>
-                          <Radio value="1">Dormitory</Radio>
-                          <Radio value="2">Apartment</Radio>
-                          <Radio value="3">Boarding House</Radio>
+                          <Radio value="Condominium">Condominium</Radio>
+                          <Radio value="Dormitory">Dormitory</Radio>
+                          <Radio value="Apartment">Apartment</Radio>
+                          <Radio value="Boarding House">Boarding House</Radio>
                         </Stack>
                       </RadioGroup>
                     </FormControl>
                   </Box>
                   <Box pb="5">
-                    <Heading fontSize="25" mb="3">
-                      Minimum Stay
-                    </Heading>
-                    <FormControl name="minstay">
-                      <RadioGroup
-                        pl="3"
-                        colorScheme="upd"
-                        onChange={(value) =>
-                          formik.handleChange("minstay")(value)
-                        }
+                    <Heading fontSize="25">Minimum Stay</Heading>
+                    <FormControl id="minstay">
+                      <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
+                        placeholder="Specify minimum duration of stay in months"
+                        variant="flushed"
+                        maxW={{ lg: "80%", sm: "100%" }}
+                        onChange={formik.handleChange}
                         value={formik.values.minstay}
-                      >
-                        <Stack ml="-2" mt="2" direction={["column"]}>
-                          <Radio value="0">1 - 5 months</Radio>
-                          <Radio value="1">6 - 11 months</Radio>
-                          <Radio value="2">12 months or more</Radio>
-                        </Stack>
-                      </RadioGroup>
+                      />
                     </FormControl>
                   </Box>
                   <Box pb="5">
                     <Heading fontSize="25">No. of Bedrooms</Heading>
                     <FormControl id="bed">
                       <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
                         placeholder="Specify number of bedrooms"
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
@@ -260,6 +281,9 @@ export const CreateProperty = () => {
                     <Heading fontSize="25">No. of Bathrooms</Heading>
                     <FormControl id="bath">
                       <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
                         placeholder="Specify number of bathrooms"
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
@@ -274,6 +298,9 @@ export const CreateProperty = () => {
                     <Heading fontSize="25">Occupancy</Heading>
                     <FormControl id="occupancy">
                       <Input
+                        type="number"
+                        min="0"
+                        onWheel={preventChangeInput}
                         placeholder="No. of occupants"
                         variant="flushed"
                         maxW={{ lg: "80%", sm: "100%" }}
@@ -296,9 +323,9 @@ export const CreateProperty = () => {
                         value={formik.values.furnishing}
                       >
                         <Stack ml="-2" mt="2" direction={["column"]}>
-                          <Radio value="0">Full</Radio>
-                          <Radio value="1">Semi</Radio>
-                          <Radio value="2">None</Radio>
+                          <Radio value="Full">Full</Radio>
+                          <Radio value="Semi">Semi</Radio>
+                          <Radio value="None">None</Radio>
                         </Stack>
                       </RadioGroup>
                     </FormControl>
@@ -330,19 +357,39 @@ export const CreateProperty = () => {
                     <FormControl>
                       <CheckboxGroup pl="3" colorScheme="upd">
                         <Stack ml="1" mt="2" direction={["column"]}>
-                          <Checkbox value="0" name="inclusion" onChange={formik.handleChange}>
+                          <Checkbox
+                            value="0"
+                            name="inclusion"
+                            onChange={formik.handleChange}
+                          >
                             Electricity
                           </Checkbox>
-                          <Checkbox value="1" name="inclusion" onChange={formik.handleChange}>
+                          <Checkbox
+                            value="1"
+                            name="inclusion"
+                            onChange={formik.handleChange}
+                          >
                             Water
                           </Checkbox>
-                          <Checkbox value="2" name="inclusion" onChange={formik.handleChange}>
+                          <Checkbox
+                            value="2"
+                            name="inclusion"
+                            onChange={formik.handleChange}
+                          >
                             Own Wifi
                           </Checkbox>
-                          <Checkbox value="3" name="inclusion" onChange={formik.handleChange}>
+                          <Checkbox
+                            value="3"
+                            name="inclusion"
+                            onChange={formik.handleChange}
+                          >
                             Own Kitchen Area
                           </Checkbox>
-                          <Checkbox value="4" name="inclusion" onChange={formik.handleChange}>
+                          <Checkbox
+                            value="4"
+                            name="inclusion"
+                            onChange={formik.handleChange}
+                          >
                             Parking Area
                           </Checkbox>
                         </Stack>
@@ -364,7 +411,7 @@ export const CreateProperty = () => {
                   </Box>
                   <Button
                     isLoading={isLoading}
-                    maxW={{ sm: "100%", md: "7em" }}
+                    maxW={{ md: "10em", sm: "100%" }}
                     loadingText="Submitting"
                     colorScheme="upd"
                     variant="solid"
