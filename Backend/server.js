@@ -56,7 +56,6 @@ app.use(passport.session());
 
 if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
-  sess.cookie.secure = true; // serve secure cookies
 }
 
 // User authentication routes
