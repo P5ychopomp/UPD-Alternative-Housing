@@ -53,10 +53,8 @@ var sess = {
 app.use(session(sess));
 app.use(passport.initialize());
 app.use(passport.session());
+app.set("trust proxy", 1); // trust first proxy
 
-if (app.get("env") === "production") {
-  app.set("trust proxy", 1); // trust first proxy
-}
 
 // User authentication routes
 var authRouter = require("./routes/auth");
