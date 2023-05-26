@@ -40,13 +40,13 @@ var sess = {
   saveUninitialized: true,
   // Use the mysql session store
   store: sessionStore,
-//   cookie: {
-//     httpOnly: true,
-//     sameSite: "none",
-//     secure: true,
-//     expires: new Date(Date.now() + expiration),
-//     maxAge: expiration,
-//   },
+  cookie: {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    expires: new Date(Date.now() + expiration),
+    maxAge: expiration,
+  },
 };
 app.use(session(sess));
 app.use(passport.initialize());
