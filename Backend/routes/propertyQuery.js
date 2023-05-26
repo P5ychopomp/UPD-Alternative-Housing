@@ -1,8 +1,66 @@
 // SQL statement construction for Properties table
+const  express = require("express");
+const router = express.Router()
 
 const { queryField, mQueryField, SQLQuery } = require('./sqlQuery');
+const { upload, getSignedImgUrl, imgUpload, deleteImg } = require('../s3Bucket');
+const pool = require('../db_config').pool;
+
+var ensureLogIn = require('connect-ensure-login').ensureLoggedIn;
+var ensureLoggedIn = ensureLogIn();
 
 const ADMIN = 17; // let admin = user 17
+
+// search results request
+router.get("/", queryProperty, queryDB, (req,res, next)=>{
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        //res.json({data})
+        req.data=data
+        next()
+    })
+}, getSignedImgUrl)
+
+// property details request given property_id
+router.get("/:pid", queryProperty, queryDB, (req,res, next)=>{
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        //res.json({data})
+        req.data=data
+        next()
+    })
+}, getSignedImgUrl)
+
+router.put("/update/:pid", ensureLoggedIn, upload.single('image'), (req,res, next)=>{ 
+    pool.query("SELECT img_url FROM properties WHERE property_id = ?",[req.params.pid], function(err, data, fields) {
+        if (err) throw err;
+        req.imgName = data[0].img_url
+        next()
+    })}, imgUpload, updateProperty, queryDB, (req,res)=>{
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
+
+router.post("/create", ensureLoggedIn, upload.single('image'), imgUpload, createProperty, queryDB, (req,res)=>{ 
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json(req.sql.fields)
+    })
+})
+
+router.delete("/delete/:pid", ensureLoggedIn, (req,res, next)=>{
+    pool.query("SELECT img_url FROM properties WHERE property_id = ?",[req.params.pid], function(err, data, fields) {
+        if (err) throw err;
+        req.imgName = data[0].img_url
+        next()
+    })}, deleteImg, deleteProperty, queryDB, (req,res)=>{ 
+    pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
+        if (err) throw err;
+        res.json({data})
+    })
+})
 
 class keyword extends queryField{
     constructor(value){
@@ -63,20 +121,30 @@ class Property extends SQLQuery{ // used by update and create property
 
         this.pid = new queryField("property_id",fields.pid);   // property ID
         this.pname = new queryField("property_name",fields.pname);
-        this.sadd = new queryField("street_address",fields.add);
+        this.sadd = new queryField("street_address",fields.sadd);
         this.brgy =new queryField("brgy",fields.brgy);
-        this.city =new queryField("city_municip",fields.city);
+        this.city =new queryField("city_municip",fields.city); 
         this.area = new queryField("lot_area",fields.area);
         this.rate = new queryField("rate",fields.rate);
         this.type = new queryField("lot_type",fields.type);
+        this.bed = new queryField("num_bedrooms", fields.bed);
+        this.bath = new queryField("num_bathrooms", fields.bath);
         this.minstay = new queryField("min_month_stay",fields.minstay);
         this.occupancy = new queryField("occupancy",fields.curfew);
         this.curfew = new queryField("curfew",fields.curfew);
-        this.inclusion = new queryField("inclusion",fields.inclusion);
         this.other = new queryField("other_details",fields.other);
         this.img = new queryField("img_url",fields.img);
+        this.furnishing = new queryField("furnishing", fields.furnishing);
         this.date = new queryField("date_posted",fields.date);
         this.lid = new queryField("landlord_id",fields.lid);
+        if (fields.inclusion){
+            let f = [];
+            for (let v=0; v<fields.inclusion.length;v++){
+                console.log(fields.inclusion[v])
+                f.push(["Electricity","Water","WiFi","Kitchen","Parking"][fields.inclusion[v]])
+            }
+            this.inclusion = new queryField("inclusion",f.join(","));
+        }
     }
 }
 
@@ -139,9 +207,43 @@ class DeletePropertyQuery extends SQLQuery{
     }
 }
 
-module.exports = {
-    GetPropertyQuery,
-    UpdatePropertyQuery,
-    CreatePropertyQuery,
-    DeletePropertyQuery
+function queryProperty(req, res, next){
+    req.sql = new GetPropertyQuery({...req.query, ...req.params}); // include req.params
+    next();
 }
+
+function updateProperty(req, res, next){
+    console.log(req.body);
+    req.body.lid=req.session.passport.user // logged in user id
+    req.body.pid=req.params.pid
+    console.log(req.body)
+    req.sql = new UpdatePropertyQuery(req.body);
+    next();
+}
+
+function createProperty(req, res, next){
+    req.body.lid=req.session.passport.user // logged in user id
+    req.sql = new CreatePropertyQuery(req.body);
+    next();
+}
+
+function deleteProperty(req, res, next){
+    req.body.lid=req.session.passport.user // logged in user id
+    req.body.pid=req.params.pid;
+    req.sql = new DeletePropertyQuery(req.body);
+    next();
+}
+
+function queryDB(req, res, next){
+    if (req.sql.build()==400){
+        return res.status(400).json({ err: "Bad Request"});
+    }
+
+    // log sql query statement
+    console.log('request validated.')
+    console.log(req.sql.getSQL())      
+    console.log(req.sql.getValues())
+    next();
+}
+
+module.exports = router;
