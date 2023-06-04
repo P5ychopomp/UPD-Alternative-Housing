@@ -8,8 +8,8 @@ const Card = ({ property }) => {
     <ChakraProvider theme={Theme}>
       <Box maxW={['100em', '16em', '16em']} borderRadius='lg' overflow='hidden' boxShadow='0px 0px 15px 1px #dbdbdb' className='card'>
         <Image
-          src={'https://bit.ly/2Z4KKcF'}
-          alt={property.img_url} />
+          src={property.image_url || 'https://bit.ly/2Z4KKcF'}
+          alt={property.property_name} />
 
         <Box p='2' pt='2' pb='0'>
           <Badge borderRadius='full' px='2' colorScheme={

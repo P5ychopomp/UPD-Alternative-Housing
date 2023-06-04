@@ -45,7 +45,8 @@ const Login = () => {
       }
     )
       .then(async (response) => {
-        if (response.status === 200) {
+        if (response.data) {
+          localStorage.setItem("id", response.data);
           await auth.login(false);
           navigate("/Landlord/CreateProperty");
         }

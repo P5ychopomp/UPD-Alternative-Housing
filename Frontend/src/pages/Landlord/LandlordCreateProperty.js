@@ -22,7 +22,6 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import ImageUpload from "../../components/Landlord/ImageUpload.js";
 Axios.defaults.withCredentials = true;
 
 export const CreateProperty = () => {

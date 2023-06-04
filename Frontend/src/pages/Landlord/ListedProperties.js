@@ -1,5 +1,4 @@
 import {
-  ChakraProvider,
   Box,
   Image,
   Table,
@@ -11,12 +10,41 @@ import {
   Td,
   TableContainer,
   Button,
+  Container,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { fetchBaseUrl } from "../../utils/FetchBaseUrl";
+import { useNavigate } from "react-router";
+import Axios from "axios";
 
 const ListedProperties = ({ property }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const id = localStorage.getItem("id");
+    if (!id) navigate('/Landlord/Login')
+    const getUserListings = () => {
+      Axios.get(`${fetchBaseUrl}?landlord_id=${id}`).then((res) => {
+      });
+    };
+    getUserListings();
+  }, []);
+
   return (
-    <ChakraProvider>
-      <Box mt="20" alignItems="center" centerContent>
+    <Container
+      maxW={{ base: "100%", md: "90%" }}
+      mt="10"
+      p={{ base: "0", lg: "4" }}
+    >
+      <Box
+        mt="20"
+        alignItems="center"
+        centerContent
+        borderRadius="lg"
+        boxShadow="0 0 10px 5px #dbdbdb"
+        bgColor="white"
+        p="5"
+      >
         <TableContainer>
           <Table variant="simple" size="lg">
             <Thead>
@@ -69,7 +97,7 @@ const ListedProperties = ({ property }) => {
           </Table>
         </TableContainer>
       </Box>
-    </ChakraProvider>
+    </Container>
   );
 };
 

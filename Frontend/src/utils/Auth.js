@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const login = async () => {
     await Axios.get(`${fetchAuth}/api/check-authentication`).then(
       (response) => {
-        setUser(response.data.isAuthenticated);
+        setUser(response.data.isAuthenticated)
         localStorage.setItem("key", response.data.isAuthenticated);
       }
     );
