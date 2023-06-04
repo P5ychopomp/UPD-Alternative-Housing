@@ -1,4 +1,4 @@
 import { fetchAuth } from "./FetchAuth"
 
-export const fetchBaseUrl = `${fetchAuth}/api/listings`
+export const fetchBaseUrl = `${fetchAuth}/api/listing`
 

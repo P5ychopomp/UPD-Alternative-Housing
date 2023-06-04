@@ -22,10 +22,12 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
+import ImageUpload from "../../components/Landlord/ImageUpload.js";
 Axios.defaults.withCredentials = true;
 
 export const CreateProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       pname: "",
@@ -42,10 +44,8 @@ export const CreateProperty = () => {
       curfew: "",
       other: "",
       img: "",
-      furnishing: null,
-      date: new Date(
-        new Date().toLocaleString("en", { timeZone: "Asia/Manila" })
-      ),
+      furnishing: "",
+      date: "",
       inclusion: [],
     },
     validationSchema: Yup.object({
@@ -80,15 +80,17 @@ export const CreateProperty = () => {
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
-      await Axios.post(
-        `${fetchAuth}/api/listing/create`,
-        JSON.stringify(values),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      const formData = new FormData();
+
+      Object.keys(values).forEach((fieldName) => {
+        formData.append(fieldName, values[fieldName]);
+      });
+
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      await Axios.post(`${fetchAuth}/api/listing/create`, formData)
         .then((response) => {
           console.log(response.data);
         })
@@ -98,11 +100,11 @@ export const CreateProperty = () => {
         .finally(() => {
           setIsLoading(false);
         });
+      setIsLoading(false);
     },
   });
 
   console.log(formik.errors);
-  console.log(formik.values);
 
   const preventChangeInput = (e) => {
     // Prevent the input value change
@@ -119,7 +121,11 @@ export const CreateProperty = () => {
 
   return (
     <ChakraProvider theme={Theme}>
-      <Container minW="90%" mt="10">
+      <Container
+        maxW={{ base: "100%", md: "90%" }}
+        mt="10"
+        p={{ base: "0", lg: "4" }}
+      >
         <form onSubmit={formik.handleSubmit}>
           <Heading mb="3">
             <FormControl id="pname">
@@ -142,15 +148,36 @@ export const CreateProperty = () => {
             bgColor="white"
             p="5"
           >
-            <Box borderRadius="lg" bgColor="gray.100" p="5">
-              <Stack alignItems="center" textAlign="center">
-                <Icon icon="bx:image-add" height="150px" color="#A0AEC0" />
-                <Text fontWeight="bold" color="#A0AEC0" fontSize="sm">
-                  Click to upload property pictures (maximum of 10)
-                </Text>
-              </Stack>
-            </Box>
-
+            <FormControl id="img">
+              <Box
+                borderRadius="lg"
+                bgColor="gray.100"
+                p="5"
+                cursor="pointer"
+                onClick={() => {
+                  document.getElementById("imageUpload").click();
+                }}
+              >
+                <Stack alignItems="center" textAlign="center">
+                  <Icon icon="bx:image-add" height="150px" color="#A0AEC0" />
+                  <Text fontWeight="bold" color="#A0AEC0" fontSize="sm">
+                    Click to upload property pictures (maximum of 10)
+                  </Text>
+                  <Input
+                    id="imageUpload"
+                    type="file"
+                    name="img"
+                    onChange={(e) =>
+                      formik.setFieldValue("img", e.target.files[0])
+                    }
+                    style={{
+                      display: "none",
+                      pointerEvents: "none",
+                    }}
+                  />
+                </Stack>
+              </Box>
+            </FormControl>
             <Container
               as={Stack}
               p="0"

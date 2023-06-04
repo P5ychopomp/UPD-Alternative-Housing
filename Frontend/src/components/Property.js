@@ -3,25 +3,6 @@ import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import Theme from './Theme'
 
-const prop = {
-    imageUrl: 'https://bit.ly/2Z4KKcF',
-    property_name: 'House1',
-    unit_num: '943',
-    street_address: 'Lands',
-    brgy: 'Diliman',
-    city_municip: 'Quezon City',
-    rate: '19250.00',
-    lot_area: '36.00',
-    lot_type: 'Apartment',
-    min_month_stay: '24',
-    num_bedrooms: '2',
-    num_bathrooms: '1',
-    occupancy: '6',
-    furnishing: 'Full',
-    curfew: '0',
-    ameneties: 'Own Wifi'
-  }
-
 const landlord = {
     name: 'Susan Reyes',
     number: '0917-453-5455',
@@ -55,13 +36,13 @@ const PropertyTemp = ({ property }) => {
             gap={4}
             >
             <GridItem rowSpan={2} colSpan={2}>
-                <Image borderRadius='lg' src={prop.imageUrl} alt='Property Image 1'/>
+                <Image borderRadius='lg' src={property.img} alt='Property Image 1'/>
             </GridItem>
             <GridItem rowSpan={1}>
-                <Image borderRadius='lg' src={prop.imageUrl} alt='Property Image 2'/>
+                <Image borderRadius='lg' src={property.img} alt='Property Image 2'/>
             </GridItem>
             <GridItem rowSpan={1}>
-                <Image borderRadius='lg' src={prop.imageUrl} alt='Property Image 3'/>
+                <Image borderRadius='lg' src={property.img} alt='Property Image 3'/>
             </GridItem>
             </Grid>
         </Container>

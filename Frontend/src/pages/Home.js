@@ -26,14 +26,14 @@ function Home() {
       setIsLoading(true);
       axios.get(`${fetchBaseUrl}?${query}${searchFilters}`).then((res) => {
         const house = res.data;
-        setTotalpage(house.data.length);
+        setTotalpage(house.length);
         setpageCount(Math.ceil(totalpage / 20));
         axios
           .get(`${fetchBaseUrl}?page=${page + 1}&${query}${searchFilters}`)
           .then((res) => {
             setIsLoading(false);
             const house = res.data;
-            setListings(house.data);
+            setListings(house);
           });
       });
 

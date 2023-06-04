@@ -23,12 +23,14 @@ import {
 import {
   FiHome,
   FiTrendingUp,
-  FiCompass,
-  FiStar,
   FiSettings,
   FiMenu,
+  FiPocket,
+  FiTrash2,
+  FiPlusCircle,
   FiBell,
   FiChevronDown,
+  FiRefreshCw,
 } from "react-icons/fi";
 import { useAuth } from "../../utils/Auth";
 import { Outlet, useNavigate } from "react-router";
@@ -36,7 +38,7 @@ import { Outlet, useNavigate } from "react-router";
 export default function SidebarWithHeader() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="200vh" bgColor="gray.100" m='0'>
+    <Box minH="200vh" bgColor="gray.100" m="0">
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -73,15 +75,19 @@ const SidebarContent = ({ onClose, ...rest }) => {
     { name: "Home", icon: FiHome, path: "/Home" },
     {
       name: "Listed Properties",
-      icon: FiTrendingUp,
+      icon: FiPocket,
       path: "/Landlord/ListedProperties",
     },
     {
-      name: "Delisted Properties",
-      icon: FiCompass,
-      path: "/Landlord/ListedProperties",
+      name: "Create Property",
+      icon: FiPlusCircle,
+      path: "/Landlord/CreateProperty",
     },
-    { name: "Favourites", icon: FiStar, path: "/Landlord/ListedProperties" },
+    {
+      name: "Update Property",
+      icon: FiRefreshCw,
+      path: "/Landlord/CreateProperty",
+    },
     { name: "Settings", icon: FiSettings, path: "/Landlord/ListedProperties" },
   ];
 
@@ -117,7 +123,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <NavItem
           key={link.name}
           icon={link.icon}
-          onClick={() => handleClick(link.path)}
+          onClick={() => {
+            handleClick(link.path);
+            onClose();
+          }}
         >
           {link.name}
         </NavItem>
