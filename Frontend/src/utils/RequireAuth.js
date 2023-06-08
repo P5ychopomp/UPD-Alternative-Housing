@@ -4,5 +4,5 @@ import { useAuth } from "./Auth";
 export const RequireAuth = () => {
   const auth = useAuth();
 
-  return (auth.user && localStorage.getItem("id")) ? <Outlet /> : <Navigate to="/Landlord/Login"/>;
+  return auth.user ? <Outlet /> : <Navigate to="/Landlord/Login"/>;
 };
