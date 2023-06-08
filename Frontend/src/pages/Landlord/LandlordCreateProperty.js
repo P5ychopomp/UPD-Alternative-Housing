@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import Theme from "../../components/Theme.js";
 import { Icon } from "@iconify/react";
-import { fetchAuth } from "../../utils/FetchAuth";
+import { fetchAuth } from "../../utils/FetchAuth.js";
 import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -26,7 +26,6 @@ Axios.defaults.withCredentials = true;
 
 export const CreateProperty = () => {
   const [isLoading, setIsLoading] = useState(false);
-
   const formik = useFormik({
     initialValues: {
       pname: "",
@@ -84,10 +83,6 @@ export const CreateProperty = () => {
       Object.keys(values).forEach((fieldName) => {
         formData.append(fieldName, values[fieldName]);
       });
-
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
 
       await Axios.post(`${fetchAuth}/api/listing/create`, formData)
         .then((response) => {

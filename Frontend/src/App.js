@@ -23,12 +23,19 @@ import { AuthProvider } from "./utils/Auth";
 import { RequireAuth } from "./utils/RequireAuth";
 import ListedProperties from "./pages/Landlord/ListedProperties";
 import SidebarWithHeader from "./components/Landlord/Sidebar";
+import { UpdateProperty } from "./pages/Landlord/LandlordUpdateProperty";
 
 const App = () => {
   return (
     <AuthProvider>
       <ChakraProvider theme={Theme}>
-        <Container maxW="100%" minH="100vh" p="0" display='flex' flexDirection='column'>
+        <Container
+          maxW="100%"
+          minH="100vh"
+          p="0"
+          display="flex"
+          flexDirection="column"
+        >
           <Routes>
             <Route element={<Navbar />}>
               <Route index element={<Landing />} />
@@ -52,6 +59,7 @@ const App = () => {
               <Route path="/Landlord" element={<SidebarWithHeader />}>
                 <Route path="ListedProperties" element={<ListedProperties />} />
                 <Route path="CreateProperty" element={<CreateProperty />} />
+                <Route path="UpdateProperty/:id" element={<UpdateProperty />} />
               </Route>
             </Route>
           </Routes>

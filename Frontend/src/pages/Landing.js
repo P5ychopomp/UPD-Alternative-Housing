@@ -1,6 +1,4 @@
 // @ts-nocheck
-import { Link } from "react-router-dom";
-import "../styles/App.css";
 import {
   Card,
   CardBody,
@@ -14,6 +12,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
+import "../styles/App.css";
 
 const Landing = () => {
   return (

@@ -1,36 +1,45 @@
+import { PhoneIcon } from "@chakra-ui/icons";
 import {
-  Flex,
   Box,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  HStack,
-  InputRightElement,
-  Stack,
   Button,
-  Heading,
-  Text,
-  useColorModeValue,
-  Link,
   ChakraProvider,
   Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  HStack,
+  Heading,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Link,
   Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { Link as ReactLink, useNavigate } from "react-router-dom";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import Theme from "../../components/Theme";
-import { fetchAuth } from "../../utils/FetchAuth";
 import Axios from "axios";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { FaFacebook } from "react-icons/fa";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import Theme from "../../components/Theme";
 import { useAuth } from "../../utils/Auth";
+import { fetchAuth } from "../../utils/FetchAuth";
 
 export default function Register() {
+  const toast = useToast();
   const navigate = useNavigate();
   const auth = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -44,14 +53,16 @@ export default function Register() {
     },
     validationSchema: Yup.object({
       first_name: Yup.string()
-        .max(40, "Must be 40 characters or less")
-        .required("Required"),
+        .max(40, "First Name must be 40 characters or less")
+        .required("First Name is required"),
       last_name: Yup.string()
-        .max(25, "Must be 25 characters or less")
-        .required("Required"),
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
-      passwordconfirm: Yup.string().required("Required"),
+        .max(25, "Last Name must be 25 characters or less")
+        .required("Last Name is required"),
+      email: Yup.string()
+        .email("Email address must contain an '@'")
+        .required("Email address is required"),
+      password: Yup.string().required("Password is required"),
+      passwordconfirm: Yup.string().required("Confirm Password is required"),
       /* facebook: Yup.string().max("Invalid email address").required("Required"),
       phone: Yup.string().max("Invalid email address").required("Required"), */
     }),
@@ -62,6 +73,7 @@ export default function Register() {
         },
       })
         .then(async (response) => {
+          setIsLoading(true);
           if (response.status === 200) {
             await Axios.post(
               `${fetchAuth}/login`,
@@ -77,19 +89,42 @@ export default function Register() {
               }
             ).then(async (response) => {
               if (response.status === 200) {
-                await auth.login(false);
-                navigate("/Landlord/CreateProperty");
+                await auth.login();
+                showToast(
+                  "Great! You are now registered. You will be redirected to the Log-in page",
+                  "success",
+                  "Account Created"
+                );
+                setTimeout(() => {
+                  navigate("/Landlord/Login");
+                }, 2500);
               }
             });
           }
         })
-        .catch((error) => {
-          console.log(error.response);
+        .catch((errors) => {
+          //console.log(error.response.data)
+          errors.response.data.forEach((err) => {
+            showToast(err, "error", "Error");
+          });
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
+      setIsLoading(false);
     },
   });
 
-  console.log(formik.errors);
+  const showToast = (message, status, title) => {
+    toast({
+      title: title,
+      description: message,
+      status: status,
+      duration: 4000,
+      position: "top",
+      isClosable: true,
+    });
+  };
 
   return (
     <ChakraProvider theme={Theme}>
@@ -119,41 +154,75 @@ export default function Register() {
               <Stack spacing={4}>
                 <Flex maxWidth={"100%"} flexWrap="wrap">
                   <Box minW={["100%", "100%", "49%"]}>
-                    <FormControl name="fname" id="first_name" isRequired>
+                    <FormControl
+                      name="fname"
+                      id="first_name"
+                      isRequired
+                      isInvalid={
+                        formik.errors.first_name && formik.touched.first_name
+                      }
+                    >
                       <FormLabel>First Name</FormLabel>
                       <Input
                         type="text"
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         value={formik.values.first_name}
                       />
+                      <FormErrorMessage>
+                        {formik.errors.first_name}
+                      </FormErrorMessage>
                     </FormControl>
                   </Box>
                   <Spacer />
                   <Box minW={["100%", "100%", "49%"]}>
-                    <FormControl name="=lname" id="last_name" isRequired>
+                    <FormControl
+                      name="=lname"
+                      id="last_name"
+                      isRequired
+                      isInvalid={
+                        formik.errors.last_name && formik.touched.last_name
+                      }
+                    >
                       <FormLabel>Last Name</FormLabel>
                       <Input
                         type="text"
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         value={formik.values.last_name}
                       />
+                      <FormErrorMessage>
+                        {formik.errors.last_name}
+                      </FormErrorMessage>
                     </FormControl>
                   </Box>
                 </Flex>
-                <FormControl name="email" id="email" isRequired>
+                <FormControl
+                  name="email"
+                  id="email"
+                  isRequired
+                  isInvalid={formik.errors.email && formik.touched.email}
+                >
                   <FormLabel>Email address</FormLabel>
                   <Input
                     type="email"
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     value={formik.values.email}
                   />
+                  <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
                 </FormControl>
-                <FormControl id="password" isRequired>
+                <FormControl
+                  id="password"
+                  isRequired
+                  isInvalid={formik.errors.password && formik.touched.password}
+                >
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
                       type={showPassword ? "text" : "password"}
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={formik.values.password}
                     />
                     <InputRightElement width="3.5rem">
@@ -164,30 +233,45 @@ export default function Register() {
                           setShowPassword((showPassword) => !showPassword)
                         }
                       >
-                        {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                        {showPassword ? (
+                          <Icon as={FiEye} color="gray.500" />
+                        ) : (
+                          <Icon as={FiEyeOff} color="gray.500" />
+                        )}
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <Text
-                    mt="1"
-                    maxW="100%"
-                    fontWeight="medium"
-                    fontSize="11"
-                    color="gray"
-                  >
-                    Password must be 6 characters long and must contain at least
-                    1 special character and number.
-                  </Text>
+                  {!formik.errors.password ? (
+                    <FormHelperText>
+                      Password must be 8 characters long and must contain at
+                      least 1 special character and number.
+                    </FormHelperText>
+                  ) : (
+                    <FormErrorMessage>
+                      {formik.errors.password}
+                    </FormErrorMessage>
+                  )}
                 </FormControl>
-                <FormControl id="passwordconfirm" isRequired>
+                <FormControl
+                  id="passwordconfirm"
+                  isRequired
+                  isInvalid={
+                    formik.errors.passwordconfirm &&
+                    formik.touched.passwordconfirm
+                  }
+                >
                   <FormLabel>Confirm Password</FormLabel>
                   <InputGroup>
                     <Input
                       type="password"
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={formik.values.passwordconfirm}
                     />
                   </InputGroup>
+                  <FormErrorMessage>
+                    {formik.errors.passwordconfirm}
+                  </FormErrorMessage>
                 </FormControl>
               </Stack>
               <Stack spacing={4}>
@@ -197,26 +281,37 @@ export default function Register() {
                   borderColor="gray.400"
                   variant="dashed"
                 />
-                <FormControl id="facebook" isRequired>
+                <FormControl id="facebook">
                   <FormLabel>Facebook Profile</FormLabel>
-                  <Input
-                    type="text"
-                    onChange={formik.handleChange}
-                    value={formik.values.facebook}
-                  />
+                  <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                      <Icon as={FaFacebook} color="gray.400" />
+                    </InputLeftElement>
+                    <Input
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.facebook}
+                    />
+                  </InputGroup>
                 </FormControl>
-                <FormControl name="phone" id="phone" isRequired>
+                <FormControl name="phone" id="phone">
                   <FormLabel>Phone Number</FormLabel>
-                  <Input
-                    type="number"
-                    onChange={formik.handleChange}
-                    value={formik.values.phone}
-                  />
+                  <InputGroup>
+                    <InputLeftElement pointerEvents="none">
+                      <PhoneIcon color="gray.400" />
+                    </InputLeftElement>
+                    <Input
+                      type="tel"
+                      onChange={formik.handleChange}
+                      value={formik.values.phone}
+                    />
+                  </InputGroup>
                 </FormControl>
                 <HStack spacing={10} pt={2} justifyContent="center">
                   <Button
                     type="submit"
                     loadingText="Submitting"
+                    isLoading={isLoading}
                     size="lg"
                     bg={"upd.400"}
                     color={"white"}

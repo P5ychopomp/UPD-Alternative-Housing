@@ -70,7 +70,7 @@ const Search = ({
                               <WarningIcon pl='0' pr='2' boxSize='1.5em'/>
                               <Stack spacing='1'>
                               <Box fontWeight='bold'>Invalid Keyword</Box>
-                              <Box fontSize='sm' >Keyword can't contain the following characters: ` ' / * % ; + | &lt; &gt; = ! - .</Box>
+                              <Box fontSize='sm' >Keyword can't contain the following characters: ` ' / * % ; + | &lt; &gt; = ! </Box>
                             </Stack>
                             </Container>
                             
@@ -98,7 +98,7 @@ const Search = ({
                 color="#58152e"
                 size={25}
                 onClick={() => {
-                  if (keywords.match(/[`'/*%;+|<>=!.-]/)) {
+                  if (keywords.match(/[`'/*%;+|<>=!]/)) {
                     setisError(true);
                   } else {
                     console.log(filters);

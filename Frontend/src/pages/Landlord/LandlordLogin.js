@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  Icon,
   Image,
   Input,
   InputGroup,
@@ -13,24 +14,28 @@ import {
   Link,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
+import Axios from "axios";
+import { useState } from "react";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import Theme from "../../components/Theme";
-import { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import Axios from "axios";
-import { fetchAuth } from "../../utils/FetchAuth";
 import { useAuth } from "../../utils/Auth";
+import { fetchAuth } from "../../utils/FetchAuth";
 
 const Login = () => {
+  const toast = useToast();
   const navigate = useNavigate();
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   Axios.defaults.withCredentials = true;
 
   const login = async () => {
+    setIsLoading(true);
     await Axios.post(
       `${fetchAuth}/login`,
       {
@@ -45,22 +50,38 @@ const Login = () => {
       }
     )
       .then(async (response) => {
-        if (response.data) {
-          localStorage.setItem("id", response.data);
-          await auth.login(false);
-          navigate("/Landlord/CreateProperty");
+        if (response.data.data) {
+          localStorage.setItem("id", response.data.data);
+          await auth.login();
+          navigate("/Landlord/ListedProperties");
         }
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          console.log("Invalid Credentials");
+          showToast(
+            "Please input the correct email or password",
+            "error",
+            "Invalid Credentials"
+          );
         }
       });
+      setIsLoading(false);
+  };
+
+  const showToast = (message, status, title) => {
+    toast({
+      title: title,
+      description: message,
+      status: status,
+      duration: 4000,
+      position: "top",
+      isClosable: true,
+    });
   };
 
   return (
     <ChakraProvider theme={Theme}>
-      <Container mt="100" maxW='100%' align={"center"} mb="10">
+      <Container mt="100" maxW="100%" align={"center"} mb="10">
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"} color="upd.700">
             Welcome Landlord and Landladies!
@@ -69,7 +90,7 @@ const Login = () => {
             Help an Isko/Iska by listing your space on our website today. 🏠
           </Text>
         </Stack>
-        <Stack maxW={['100%', '100%', '50em', '50em', '50em']} >
+        <Stack maxW={["100%", "100%", "50em", "50em", "50em"]}>
           <Heading mt="20" mb="2" fontSize={"4xl"} color="upd.700">
             Login
           </Heading>
@@ -127,7 +148,11 @@ const Login = () => {
                         setShowPassword((showPassword) => !showPassword)
                       }
                     >
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                      {showPassword ? (
+                        <Icon as={FiEye} color="gray.500" />
+                      ) : (
+                        <Icon as={FiEyeOff} color="gray.500" />
+                      )}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -135,7 +160,9 @@ const Login = () => {
 
               <GridItem colSpan={4} rowSpan={1}>
                 <Button
+                  type="submit"
                   loadingText="Submitting"
+                  isLoading={isLoading}
                   size="lg"
                   bg={"upd.400"}
                   color={"white"}
