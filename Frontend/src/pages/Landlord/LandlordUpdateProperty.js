@@ -106,11 +106,13 @@ export const UpdateProperty = () => {
             "success",
             "Updated Property Info"
           );
-          navigate("/Landlord/ListedProperties");
+          setTimeout(() => {
+            navigate("/Landlord/ListedProperties");
+          }, 500);
         })
         .catch((error) => {
           showToast(
-            "Sorry, we could not delete your selected properties at the moment. Please try again later.",
+            "Sorry, we could not update a property at the moment. Please try again later.",
             "error",
             "Something went wrong"
           );

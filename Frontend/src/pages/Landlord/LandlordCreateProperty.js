@@ -14,6 +14,7 @@ import {
   Text,
   Textarea,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import Theme from "../../components/Theme.js";
 import { Icon } from "@iconify/react";
@@ -22,9 +23,12 @@ import Axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 Axios.defaults.withCredentials = true;
 
 export const CreateProperty = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -86,10 +90,21 @@ export const CreateProperty = () => {
 
       await Axios.post(`${fetchAuth}/api/listing/create`, formData)
         .then((response) => {
-          console.log(response.data);
+          showToast(
+            "Great! You have successfuly created a property",
+            "success",
+            "Property Created"
+          );
+          setTimeout(() => {
+            navigate("/Landlord/ListedProperties");
+          }, 500);
         })
         .catch((error) => {
-          console.log(error.response);
+          showToast(
+            "Sorry, we could not create a property at the moment. Please try again later.",
+            "error",
+            "Something went wrong"
+          );
         })
         .finally(() => {
           setIsLoading(false);
@@ -98,7 +113,18 @@ export const CreateProperty = () => {
     },
   });
 
-  console.log(formik.errors);
+  const showToast = (message, status, title) => {
+    toast({
+      title: title,
+      description: message,
+      status: status,
+      duration: 4000,
+      position: "top",
+      isClosable: true,
+    });
+  };
+
+  //console.log(formik.errors);
 
   const preventChangeInput = (e) => {
     // Prevent the input value change
