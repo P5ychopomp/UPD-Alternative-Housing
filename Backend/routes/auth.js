@@ -31,11 +31,11 @@ router.post("/register", async (req, res) => {
   // Redirect the POST request to registration page when form is invalid
   // TODO: Implement better handling of invalid form
   if (!first_name || !last_name || !email || !password || !passwordconfirm) {
-    errors.push({ message: "Please enter all fields" });
+    errors.push("Please enter all required fields.");
   }
 
   if (password !== passwordconfirm) {
-    errors.push({ message: "Passwords do not match" });
+    errors.push("Password and confirm password do not match.");
   }
 
   // Password must be atleast 6 characters with one digit and special character
@@ -45,14 +45,14 @@ router.post("/register", async (req, res) => {
 
   if (!strongPassword.test(password)) {
     // Error: Weak Password
-    errors.push({
-      message: "Your password is too weak. Please choose a stronger password.",
-    });
+    errors.push(
+      "Your password is too weak. Please choose a stronger password."
+    );
   }
 
   if (errors.length > 0) {
     console.log(errors);
-    res.status(401).send(errors);
+    res.status(400).send(errors);
   } else {
     hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
@@ -68,7 +68,8 @@ router.post("/register", async (req, res) => {
 
         if (results.length > 0) {
           // Error 202 : Account already used
-          res.sendStatus(409);
+          errors.push("Account already exists.")
+          res.status(400).send(errors);
         } else {
           console.log("Inserting to database...");
           console.log({ first_name, last_name, email, hashedPassword });
@@ -120,7 +121,7 @@ router.post("/login", function (req, res, next) {
       }
       // Success 400: User Logged In
       console.log(req.session);
-      return res.sendStatus(200);
+      return res.json({ data: user.id });
     });
   })(req, res, next);
 });

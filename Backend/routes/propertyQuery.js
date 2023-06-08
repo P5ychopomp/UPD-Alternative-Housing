@@ -31,10 +31,10 @@ router.get("/:pid", queryProperty, queryDB, (req,res, next)=>{
     })
 }, getSignedImgUrl)
 
-router.put("/update/:pid", ensureLoggedIn, upload.single('image'), (req,res, next)=>{ 
+router.put("/update/:pid", ensureLoggedIn, upload.single('img'), (req,res, next)=>{ 
     pool.query("SELECT img_url FROM properties WHERE property_id = ?",[req.params.pid], function(err, data, fields) {
         if (err) throw err;
-        req.imgName = data[0].img_url
+        //req.imgName = data[0].img_url
         next()
     })}, imgUpload, updateProperty, queryDB, (req,res)=>{
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
@@ -43,7 +43,8 @@ router.put("/update/:pid", ensureLoggedIn, upload.single('image'), (req,res, nex
     })
 })
 
-router.post("/create", ensureLoggedIn, upload.single('image'), imgUpload, createProperty, queryDB, (req,res)=>{ 
+router.post("/create", ensureLoggedIn, upload.single('img'), imgUpload, createProperty, queryDB, (req,res)=>{
+    console.log(req.file);
     pool.query(req.sql.getSQL(), req.sql.getValues(), function(err, data, fields) {
         if (err) throw err;
         res.json(req.sql.fields)
